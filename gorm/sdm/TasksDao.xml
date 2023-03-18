@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dao-class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="dao.xsd">
+
+    <crud dto="gorm-Task" table="tasks"/>
+
+    <exec-dml ref="delete from tasks where g_id=?" method="delete_all_group_tasks(g_id)"/>
+
+</dao-class>

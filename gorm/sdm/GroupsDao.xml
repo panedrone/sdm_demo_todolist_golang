@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dao-class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="dao.xsd">
+
+    <crud dto="gorm-Group" table="groups">
+        <create/>
+        <read/>
+        <update/>
+        <delete/>
+    </crud>
+
+    <query-dto-list method="GetAllGroupsLI" dto="GroupLI"/>
+
+    <!--    next ones are just for testing:    -->
+
+    <query-dto dto="GroupLI" method="GetGroupLI(int64 g_id)" ref="get_group.sql"/>
+
+    <query-list method="GetGroupLIIds()" ref="get_all_groups.sql" return-type="int64"/>
+
+    <query method="GetGroupLIId(g_id)" ref="get_group.sql" return-type="int64"/>
+
+    <exec-dml ref="delete from groups where g_id=?" method="deleteGroup2(g_id)"/>
+
+</dao-class>

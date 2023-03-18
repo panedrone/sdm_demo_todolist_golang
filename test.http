@@ -1,0 +1,25 @@
+GET http://localhost:8080/groups
+
+############## 404 StatusNotFound
+
+GET http://localhost:8080/groups/4
+
+############## 200
+
+GET http://localhost:8080/groups/21
+
+############## 200 null response
+
+GET http://localhost:8080/groups/4/groupTasks
+
+############## 200
+
+GET http://localhost:8080/groups/21/groupTasks
+
+############## 200
+
+GET http://localhost:8080/groupTasks/117
+
+############## 404 StatusNotFound
+
+GET http://localhost:8080/groupTasks/4

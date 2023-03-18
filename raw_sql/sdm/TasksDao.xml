@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dao-class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="dao.xsd">
+
+    <crud table="tasks" dto="Task">
+        <create/>
+<!--        <read-all/> &lt;!&ndash; testing &ndash;&gt;-->
+        <read/>
+        <update/>
+        <delete/>
+    </crud>
+
+    <query-dto-list method="getGroupTasks(int64 gId)" ref="get_group_tasks.sql" dto="TaskLI"/>
+
+    <exec-dml method="deleteGroupTasks(gId)" ref="delete_group_tasks.sql"/>
+
+     <!-- testing -->
+    <query method="getCount()" ref="select count(*) from tasks" return-type="int64"/>
+
+    <query-dto-list dto="TaskLI" method="getGroupTasks2(g_id)"/>
+
+</dao-class>

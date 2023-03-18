@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/styles.css" type="text/css"/>
+    <title>TODO</title>
+</head>
+
+<body>
+
+<div id="app">
+
+    <h2>SDM + Golang + {{ $data.whoiam }} + SQLite3 + Vue.js</h2>
+
+    <table class="bg" style="padding: 4px;">
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <table id="groups_table" class="section">
+                                <tr>
+                                    <th>Group</th>
+                                    <th>Tasks Count</th>
+                                </tr>
+                                <tr v-for="group in $data.groups">
+                                    <td>
+                                        <a href="#" @click="renderGroupDetails(group.g_id)">
+                                            {{ group.g_name }}
+                                        </a>
+                                    </td>
+                                    <td style="text-align: center;width: 80px;">
+                                        {{ group.g_tasks_count }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <form method="post" enctype="multipart/form-data" name="form_create_group">
+                                <table class="controls">
+                                    <tr>
+                                        <td>
+                                            <label>
+                                                <input type="text" name="g_name"/>
+                                            </label>
+                                        </td>
+                                        <td class="w1">
+                                            <a href="#" @click="groupCreate()">
+                                                <input type="button" value="+"/>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table id="group_details" style="visibility: hidden">
+                    <tr>
+                        <td>
+                            <form method="post" id="form_update_group">
+                                <table class="controls">
+                                    <tr>
+                                        <td>
+                                            <label>
+                                                <input id="g_name2" class="group-header" type="text" name="g_name"
+                                                       v-model="current_group.g_name"/>
+                                            </label>
+                                        </td>
+                                        <td class="w1">
+                                            <a href="#" @click="groupUpdate()">
+                                                <input type="button" value="!"/>
+                                            </a>
+                                        </td>
+                                        <td class="w1">
+                                            <a href="#" @click="groupDelete()">
+                                                <input type="button" value="x"/>
+                                            </a>
+                                        </td>
+                                        <td class="w1">
+                                            <a href="javascript:hideGroupDetails2();"><input type="button"
+                                                                                             value="&lt;"/></a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table id="tasks_table" class="section">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Subject</th>
+                                    <th>Priority</th>
+                                </tr>
+                                <tr v-for="t in $data.tasks">
+                                    <td>
+                                        {{ t.t_date }}
+                                    </td>
+                                    <td>
+                                        <a href="#" @click="renderTaskDetails(t.t_id)">
+                                            {{ t.t_subject }}
+                                        </a>
+                                    </td>
+
+                                    <td style="text-align: center;">
+                                        {{ t.t_priority }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <form method="post" id="form_create_task">
+                                <table class="controls">
+                                    <tr>
+                                        <td>
+                                            <label>
+                                                <input type="text" name="t_subject"/>
+                                            </label>
+                                        </td>
+                                        <td class="w1">
+                                            <a href="#" @click="taskCreate()">
+                                                <input type="button" value="+"/>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <form id="form_task_details" style="visibility: hidden">
+                    <div class="title" id="subj"></div>
+                    <table>
+                        <tr>
+                            <td class="form-label">Date</td>
+                            <td>
+                                <label>
+                                    <input type="text" v-model="current_task.t_date"/>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form-label">Subject</td>
+                            <td class="w100">
+                                <label>
+                                    <input type="text" v-model="current_task.t_subject"/>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form-label">Priority</td>
+                            <td>
+                                <label>
+                                    <input type="text" v-model="current_task.t_priority"/>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <label>
+                                    <textarea cols="40" rows="10" v-model="current_task.t_comments"></textarea>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="controls">
+                        <tr>
+                            <td>
+                            </td>
+                            <td class="w1">
+                                <a href="#" @click="taskUpdate()">
+                                    <input type="button" value="!"/>
+                                </a>
+                            </td>
+                            <td class="w1">
+                                <a href="#" @click="taskDelete()">
+                                    <input type="button" value="x"/>
+                                </a>
+                            </td>
+                            <td class="w1">
+                                <a href="javascript:hideTaskDetails();"><input type="button" value="&lt;"/> </a>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script src="/static/js/vue.js"></script>
+<script src="/static/js/index.js"></script>
+
+</body>

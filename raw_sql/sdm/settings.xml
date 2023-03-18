@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="settings.xsd">
+
+    <folders target="sdm_demo_todolist" sql="raw_sql/sdm/sql"/>
+
+    <dto scope="raw_sql/dbal/dto" inheritance="" field-names-mode="0" macro=""/>
+
+    <dao scope="raw_sql/dbal" field-assign-mode="1" macro=""/>
+
+    <ide event-log="true"/>
+
+    <cpp class-prefix=""/>
+
+    <jdbc jar="raw_sql/sdm/sqlite-jdbc-3.40.0.0.jar" class="org.sqlite.JDBC"
+          url="jdbc:sqlite:$PROJECT_DIR$/todo-list.sqlite" user="" pwd=""/>
+
+    <type-map default="">
+        <type detected="java.lang.Integer" target="int64${json}"/>
+        <type detected="java.lang.Double" target="float64${json}"/>
+        <type detected="java.lang.Float" target="float64${json}"/>
+        <type detected="java.lang.String" target="string${json}"/>
+        <type detected="byte[]" target="byte[]{$json}"/>
+        <type detected="java.lang.Object" target="interface{}{$json}"/>
+    </type-map>
+
+    <macros>
+
+        <!-- =built-in= is a key-word -->
+
+        <macro value="=built-in=" name="${column}"/>
+        <macro value="=built-in=" name="${lower_snake_case(column)}"/>
+        <macro value="=built-in=" name="${camelCase(column)}"/>
+        <macro value="=built-in=" name="${TitleCase(column)}"/>
+        <macro value="=built-in=" name="${kebab-case(column)}"/>
+
+        <!-- go json tags: -->
+
+        <macro name="${col}" value="${lower_snake_case(column)}"/>
+
+        <macro name="${json}" value=" `json:&quot;${col}${0}&quot;`"/>
+
+    </macros>
+
+</settings>

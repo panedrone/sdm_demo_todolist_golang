@@ -1,0 +1,131 @@
+package router
+
+import (
+	"fmt"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+	"net/http"
+	"sdm_demo_todolist/gorm/dbal"
+	"sdm_demo_todolist/gorm/models"
+	"time"
+)
+
+func taskRead(ctx *gin.Context) {
+	var uri taskUri
+	err := ctx.ShouldBindUri(&uri)
+	if err != nil {
+		abortWithBadUri(ctx, err)
+		return
+	}
+	task, err := dbal.NewTasksDao().ReadTask(ctx, uri.TId)
+	if err == gorm.ErrRecordNotFound {
+		abortWithNotFound(ctx, err.Error())
+	} else if err != nil {
+		abortWith500(ctx, err.Error())
+	} else {
+		respondWithJSON(ctx, http.StatusOK, task)
+	}
+}
+
+func tasksReadByGroup(ctx *gin.Context) {
+	var uri groupUri
+	if err := ctx.ShouldBindUri(&uri); err != nil {
+		abortWithBadUri(ctx, err)
+		return
+	}
+	var tasks []*models.TaskLI
+	tasks, err := dbal.NewTasksDao().ReadGroupTasks(ctx, uri.GId)
+	if err != nil {
+		abortWith500(ctx, err.Error())
+		return
+	}
+	respondWithJSON(ctx, http.StatusOK, tasks)
+}
+
+func taskCreate(ctx *gin.Context) {
+	var uri groupUri
+	if err := ctx.ShouldBindUri(&uri); err != nil {
+		abortWithBadUri(ctx, err)
+		return
+	}
+	var inTask newTask
+	err := ctx.ShouldBindJSON(&inTask)
+	if err != nil {
+		abortWithBadRequest(ctx, err.Error())
+		return
+	}
+	t := models.Task{}
+	t.GId = uri.GId
+	t.TSubject = inTask.TSubject
+	t.TPriority = 1
+	currentTime := time.Now().Local()
+	layoutISO := currentTime.Format("2006-01-02")
+	t.TDate = layoutISO
+	err = dbal.NewTasksDao().CreateTask(ctx, &t)
+	if err != nil {
+		abortWith500(ctx, err.Error())
+		return
+	}
+	ctx.Status(http.StatusCreated)
+}
+
+func taskDelete(ctx *gin.Context) {
+	var uri taskUri
+	err := ctx.ShouldBindUri(&uri)
+	if err != nil {
+		abortWithBadUri(ctx, err)
+		return
+	}
+	task := &models.Task{
+		TId: uri.TId,
+	}
+	_, err = dbal.NewTasksDao().DeleteTask(ctx, task)
+	if err != nil {
+		abortWith500(ctx, err.Error())
+		return
+	}
+	ctx.Status(http.StatusNoContent)
+}
+
+func taskUpdate(ctx *gin.Context) {
+	var uri taskUri
+	err := ctx.ShouldBindUri(&uri)
+	if err != nil {
+		abortWithBadUri(ctx, err)
+		return
+	}
+	dao := dbal.NewTasksDao()
+	t, err := dao.ReadTask(ctx, uri.TId)
+	if err != nil {
+		abortWithBadRequest(ctx, err.Error())
+		return
+	}
+	var inTask models.Task
+	err = ctx.ShouldBindJSON(&inTask)
+	if err != nil {
+		abortWithBadRequest(ctx, err.Error())
+		return
+	}
+	_, err = time.Parse("2006-01-02", inTask.TDate)
+	if err != nil {
+		abortWithBadRequest(ctx, fmt.Sprintf("Date format expected '2006-01-02': %s", err.Error()))
+		return
+	}
+	if len(inTask.TSubject) == 0 {
+		abortWithBadRequest(ctx, fmt.Sprintf("Subject required"))
+		return
+	}
+	if inTask.TPriority <= 0 {
+		abortWithBadRequest(ctx, fmt.Sprintf("Invalid Priority: %d", inTask.TPriority))
+		return
+	}
+	t.TSubject = inTask.TSubject
+	t.TPriority = inTask.TPriority
+	t.TDate = inTask.TDate
+	t.TComments = inTask.TComments
+	_, err = dao.UpdateTask(ctx, t)
+	if err != nil {
+		abortWith500(ctx, err.Error())
+		return
+	}
+}
