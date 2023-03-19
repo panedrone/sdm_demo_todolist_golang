@@ -43,7 +43,7 @@
                                     <tr>
                                         <td>
                                             <label>
-                                                <input type="text" name="g_name"/>
+                                                <input type="text" v-model="g_name"/>
                                             </label>
                                         </td>
                                         <td class="w1">
@@ -122,7 +122,7 @@
                                     <tr>
                                         <td>
                                             <label>
-                                                <input type="text" name="t_subject"/>
+                                                <input type="text" v-model="t_subject"/>
                                             </label>
                                         </td>
                                         <td class="w1">
@@ -176,6 +176,9 @@
                     <table class="controls">
                         <tr>
                             <td>
+                                <span style="color: red;">
+                                    {{ task_error }}
+                                </span>
                             </td>
                             <td class="w1">
                                 <a href="#" @click="taskUpdate()">
