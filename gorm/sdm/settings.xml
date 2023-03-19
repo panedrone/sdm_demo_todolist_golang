@@ -42,15 +42,18 @@
 
     <macros>
 
-        <macro name="${column}" value="=built-in="/>
-        <macro name="${lower_snake_case(column)}" value="=built-in="/>
-        <macro name="${camelCase(column)}" value="=built-in="/>
-        <macro name="${TitleCase(column)}" value="=built-in="/>
-        <macro name="${kebab-case(column)}" value="=built-in="/>
+        <macro value="=built-in=" name="${column}"/>
+        <macro value="=built-in=" name="${lower_snake_case(column)}"/>
+        <macro value="=built-in=" name="${camelCase(column)}"/>
+        <macro value="=built-in=" name="${TitleCase(column)}"/>
+        <macro value="=built-in=" name="${kebab-case(column)}"/>
 
         <macro name="${col}" value="${lower_snake_case(column)}"/>
+
         <macro name="${json}" value=" `json:&quot;${col}${0}&quot;`"/>
-        <macro name="${json-gorm}" value=" `json:&quot;${col}${0}&quot; gorm:&quot;column:${column}${gorm-params}&quot;`"/>
+
+        <macro name="${json-gorm}"
+               value=" `json:&quot;${col}${0}&quot; gorm:&quot;column:${column}${gorm-params}&quot;`"/>
 
         <macro name="${gorm-params}">
             <vm-xml>

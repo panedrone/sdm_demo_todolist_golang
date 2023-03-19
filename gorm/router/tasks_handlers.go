@@ -33,7 +33,7 @@ func tasksReadByGroup(ctx *gin.Context) {
 		abortWithBadUri(ctx, err)
 		return
 	}
-	var tasks []*models.TaskLI
+	var tasks []*models.TaskLi
 	tasks, err := dbal.NewTasksDao().ReadGroupTasks(ctx, uri.GId)
 	if err != nil {
 		abortWith500(ctx, err.Error())

@@ -9,16 +9,18 @@
         <delete/>
     </crud>
 
-    <query-dto-list method="GetAllGroupsLI" dto="GroupLI"/>
+    <query-dto-list method="GetAllGroupsLI" dto="GroupLi"/>
 
-    <!--    next ones are just for testing:    -->
+    <!-- testing -->
+    <query-dto dto="GroupLi" method="GetGroupLi(int64 g_id)" ref="get_group.sql"/>
 
-    <query-dto dto="GroupLI" method="GetGroupLI(int64 g_id)" ref="get_group.sql"/>
-
+    <!-- testing -->
     <query-list method="GetGroupLIIds()" ref="get_all_groups.sql" return-type="int64"/>
 
+    <!-- testing -->
     <query method="GetGroupLIId(g_id)" ref="get_group.sql" return-type="int64"/>
 
-    <exec-dml ref="delete from groups where g_id=?" method="deleteGroup2(g_id)"/>
+    <!-- testing -->
+    <exec-dml method="deleteGroup2(g_id)" ref="delete from groups where g_id=?"/>
 
 </dao-class>

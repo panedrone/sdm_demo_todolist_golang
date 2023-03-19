@@ -58,11 +58,11 @@ func (dao *TasksDao) DeleteTask(ctx context.Context, p *dto.Task) (rowsAffected 
 	return
 }
 
-func (dao *TasksDao) GetGroupTasks(ctx context.Context, gId int64) (res []*dto.TaskLI, err error) {
+func (dao *TasksDao) GetGroupTasks(ctx context.Context, gId int64) (res []*dto.TaskLi, err error) {
 	sql := `select t_id, t_priority, t_date, t_subject from tasks where g_id =? 
 		order by t_id`
 	_onRow := func() (interface{}, func()) {
-		_obj := &dto.TaskLI{}
+		_obj := &dto.TaskLi{}
 		return []interface{}{
 				&_obj.TId,
 				&_obj.TPriority,
@@ -91,10 +91,10 @@ func (dao *TasksDao) GetCount(ctx context.Context) (res int64, err error) {
 	return
 }
 
-func (dao *TasksDao) GetGroupTasks2(ctx context.Context, gId int64) (res []*dto.TaskLI, err error) {
+func (dao *TasksDao) GetGroupTasks2(ctx context.Context, gId int64) (res []*dto.TaskLi, err error) {
 	sql := `select t_id, t_priority, t_date, t_subject from tasks where g_id=?`
 	_onRow := func() (interface{}, func()) {
-		_obj := &dto.TaskLI{}
+		_obj := &dto.TaskLi{}
 		return []interface{}{
 				&_obj.TId,
 				&_obj.TPriority,

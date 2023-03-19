@@ -26,15 +26,11 @@
 
     <macros>
 
-        <!-- =built-in= is a key-word -->
-
         <macro value="=built-in=" name="${column}"/>
         <macro value="=built-in=" name="${lower_snake_case(column)}"/>
         <macro value="=built-in=" name="${camelCase(column)}"/>
         <macro value="=built-in=" name="${TitleCase(column)}"/>
         <macro value="=built-in=" name="${kebab-case(column)}"/>
-
-        <!-- go json tags: -->
 
         <macro name="${col}" value="${lower_snake_case(column)}"/>
 

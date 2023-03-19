@@ -10,8 +10,8 @@
 
     <dto-class name="Task" ref="tasks"/>
 
-    <dto-class name="TaskLI" ref="tasks(g_id) / t_id, t_priority, t_date, t_subject">
-        <header>// TaskLI list item (no g_id, no t_comments)</header>
+    <dto-class name="TaskLi" ref="tasks(g_id) / t_id, t_priority, t_date, t_subject">
+        <header>// TaskLi list item (no g_id, no t_comments)</header>
     </dto-class>
 
 </dto-classes>

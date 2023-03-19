@@ -4,19 +4,19 @@
 
     <crud table="tasks" dto="Task">
         <create/>
-<!--        <read-all/> &lt;!&ndash; testing &ndash;&gt;-->
         <read/>
         <update/>
         <delete/>
     </crud>
 
-    <query-dto-list method="getGroupTasks(int64 gId)" ref="get_group_tasks.sql" dto="TaskLI"/>
+    <query-dto-list method="GetGroupTasks(int64 gId)" ref="get_group_tasks.sql" dto="TaskLi"/>
 
-    <exec-dml method="deleteGroupTasks(gId)" ref="delete_group_tasks.sql"/>
+    <exec-dml method="DeleteGroupTasks(gId)" ref="delete_group_tasks.sql"/>
 
      <!-- testing -->
-    <query method="getCount()" ref="select count(*) from tasks" return-type="int64"/>
+    <query method="GetCount()" ref="select count(*) from tasks" return-type="int64"/>
 
-    <query-dto-list dto="TaskLI" method="getGroupTasks2(g_id)"/>
+    <!-- testing -->
+    <query-dto-list dto="TaskLi" method="GetGroupTasks2(g_id)"/>
 
 </dao-class>

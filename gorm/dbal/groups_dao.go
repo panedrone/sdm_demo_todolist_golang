@@ -43,7 +43,7 @@ func (dao *GroupsDao) DeleteGroup(ctx context.Context, p *models.Group) (rowsAff
 	return
 }
 
-func (dao *GroupsDao) GetAllGroupsLI(ctx context.Context) (res []*models.GroupLI, err error) {
+func (dao *GroupsDao) GetAllGroupsLI(ctx context.Context) (res []*models.GroupLi, err error) {
 	sql := `select g.*,  
 		(select count(*) from tasks where g_id=g.g_id) as g_tasks_count 
 		from groups g`
@@ -51,12 +51,12 @@ func (dao *GroupsDao) GetAllGroupsLI(ctx context.Context) (res []*models.GroupLI
 	return
 }
 
-func (dao *GroupsDao) GetGroupLI(ctx context.Context, gId int64) (res *models.GroupLI, err error) {
+func (dao *GroupsDao) GetGroupLi(ctx context.Context, gId int64) (res *models.GroupLi, err error) {
 	sql := `select g.*,  
 		(select count(*) from tasks where g_id=g.g_id) as tasks_count 
 		from groups g 
 		where g_id=?`
-	res = &models.GroupLI{}
+	res = &models.GroupLi{}
 	_fa := res
 	err = dao.ds.QueryByFA(ctx, sql, _fa, gId)
 	return

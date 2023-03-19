@@ -4,8 +4,8 @@ package models
 // Additional custom methods can be implemented in a separate file like <this_file>_ex.go.
 // https://sqldalmaker.sourceforge.net/
 
-// GroupLI list item
-type GroupLI struct {
+// GroupLi list item
+type GroupLi struct {
 	GId         int64  `json:"g_id"` // PK
 	GName       string `json:"g_name"`
 	GTasksCount int64  `json:"g_tasks_count"`
