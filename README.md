@@ -31,7 +31,7 @@ Both parts are sharing the same Vue.js front-end and the same SQLite3 database.
 ```
 ```xml
 <dao-class>
-    <crud table="groups" dto="gorm-Group"/>
+    <crud dto="gorm-Group" table="groups"/>
     <query-dto-list method="GetAllGroups" dto="GroupLi"/>
 </dao-class>
 ```
