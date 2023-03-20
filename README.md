@@ -7,6 +7,7 @@ Both parts are sharing the same Vue.js front-end and the same SQLite3 database.
 
 ![erd.png](erd.png)
 
+dto.xml
 ```xml
 <dto-classes>
     
@@ -29,17 +30,20 @@ Both parts are sharing the same Vue.js front-end and the same SQLite3 database.
     
 </dto-classes>
 ```
+GroupsDao.xml
 ```xml
 <dao-class>
     <crud dto="gorm-Group" table="groups"/>
     <query-dto-list method="GetAllGroups" dto="GroupLi"/>
 </dao-class>
 ```
+TasksDao.xml
 ```xml
 <dao-class>
     <crud dto="gorm-Task" table="tasks"/>
 </dao-class>
 ```
+Generated code in action:
 ```go
 package router
 
