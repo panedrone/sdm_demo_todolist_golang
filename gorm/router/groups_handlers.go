@@ -26,8 +26,7 @@ func groupCreate(ctx *gin.Context) {
 }
 
 func groupsReadAll(ctx *gin.Context) {
-	grDao := dbal.NewGroupsDao()
-	groups, err := grDao.GetAllGroupsLI(ctx)
+	groups, err := dbal.NewGroupsDao().GetAllGroupsLI(ctx)
 	if err != nil {
 		abortWith500(ctx, err.Error())
 		return

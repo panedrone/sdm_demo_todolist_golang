@@ -9,19 +9,24 @@ Both parts are sharing the same Vue.js front-end and the same SQLite3 database.
 
 ```xml
 <dto-classes>
+    
     <dto-class name="gorm-Group" ref="groups"/>
+    
     <dto-class name="GroupLi" ref="get_all_groups.sql">
         <header>// Group list item</header>
         <field type="int64${json}" column="g_id"/>
         <field type="string${json}" column="g_name"/>
         <field type="int64${json}" column="g_tasks_count"/>
     </dto-class>
+    
     <dto-class name="gorm-Task" ref="tasks"/>
+    
     <dto-class name="gorm-TaskLi" ref="tasks">
         <header>// Task list item (no g_id, no t_comments)</header>
         <field column="g_id" type="-"/>
         <field column="t_comments" type="-"/>
     </dto-class>
+    
 </dto-classes>
 ```
 ```xml
@@ -64,8 +69,7 @@ func groupCreate(ctx *gin.Context) {
 }
 
 func groupsReadAll(ctx *gin.Context) {
-	grDao := dbal.NewGroupsDao()
-	groups, err := grDao.GetAllGroupsLI(ctx)
+	groups, err := dbal.NewGroupsDao().GetAllGroupsLI(ctx)
 	if err != nil {
 		abortWith500(ctx, err.Error())
 		return
