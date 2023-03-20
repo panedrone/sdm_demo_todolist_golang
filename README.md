@@ -121,7 +121,7 @@ func GroupRead(ctx *gin.Context) {
 		abortWithBadUri(ctx, err)
 		return
 	}
-	group, err := dbal.NewGroupsDao().ReadGroup(ctx, uri.GId)
+	gr, err := dbal.NewGroupsDao().ReadGroup(ctx, uri.GId)
 	if err == gorm.ErrRecordNotFound {
 		abortWithNotFound(ctx, err.Error())
 		return
@@ -130,6 +130,6 @@ func GroupRead(ctx *gin.Context) {
 		abortWith500(ctx, err.Error())
 		return
 	}
-	respondWithJSON(ctx, http.StatusOK, group)
+	respondWithJSON(ctx, http.StatusOK, gr)
 }
 ```
