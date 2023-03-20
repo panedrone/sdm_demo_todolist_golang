@@ -34,6 +34,24 @@ func GroupsReadAll(ctx *gin.Context) {
 	respondWithJSON(ctx, http.StatusOK, groups)
 }
 
+func GroupRead(ctx *gin.Context) {
+	var uri groupUri
+	if err := ctx.ShouldBindUri(&uri); err != nil {
+		abortWithBadUri(ctx, err)
+		return
+	}
+	gr, err := dbal.NewGroupsDao().ReadGroup(ctx, uri.GId)
+	if err == gorm.ErrRecordNotFound {
+		abortWithNotFound(ctx, err.Error())
+		return
+	}
+	if err != nil {
+		abortWith500(ctx, err.Error())
+		return
+	}
+	respondWithJSON(ctx, http.StatusOK, gr)
+}
+
 func GroupUpdate(ctx *gin.Context) {
 	var uri groupUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
@@ -74,22 +92,4 @@ func GroupDelete(ctx *gin.Context) {
 		abortWith500(ctx, err.Error())
 	}
 	ctx.Status(http.StatusNoContent)
-}
-
-func GroupRead(ctx *gin.Context) {
-	var uri groupUri
-	if err := ctx.ShouldBindUri(&uri); err != nil {
-		abortWithBadUri(ctx, err)
-		return
-	}
-	gr, err := dbal.NewGroupsDao().ReadGroup(ctx, uri.GId)
-	if err == gorm.ErrRecordNotFound {
-		abortWithNotFound(ctx, err.Error())
-		return
-	}
-	if err != nil {
-		abortWith500(ctx, err.Error())
-		return
-	}
-	respondWithJSON(ctx, http.StatusOK, gr)
 }
