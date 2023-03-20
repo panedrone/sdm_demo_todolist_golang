@@ -31,13 +31,13 @@ func New() *gin.Engine {
 	})
 	{
 		groups := api.Group("/groups")
-		groups.GET("/", groupsReadAll)
-		groups.POST("/", groupCreate)
+		groups.GET("/", GroupsReadAll)
+		groups.POST("/", GroupCreate)
 		{
 			group := groups.Group("/:g_id")
-			group.GET("/", groupRead)
-			group.PUT("/", groupUpdate)
-			group.DELETE("/", groupDelete)
+			group.GET("/", GroupRead)
+			group.PUT("/", GroupUpdate)
+			group.DELETE("/", GroupDelete)
 			{
 				groupTasks := group.Group("/tasks")
 				groupTasks.GET("/", tasksReadByGroup)

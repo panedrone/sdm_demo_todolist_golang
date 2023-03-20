@@ -8,7 +8,7 @@ import (
 	"sdm_demo_todolist/gorm/models"
 )
 
-func groupCreate(ctx *gin.Context) {
+func GroupCreate(ctx *gin.Context) {
 	var inGr groupCreateUpdate
 	err := ctx.ShouldBindJSON(&inGr)
 	if err != nil {
@@ -25,7 +25,7 @@ func groupCreate(ctx *gin.Context) {
 	ctx.Status(http.StatusCreated)
 }
 
-func groupsReadAll(ctx *gin.Context) {
+func GroupsReadAll(ctx *gin.Context) {
 	groups, err := dbal.NewGroupsDao().GetAllGroupsLI(ctx)
 	if err != nil {
 		abortWith500(ctx, err.Error())
@@ -34,7 +34,7 @@ func groupsReadAll(ctx *gin.Context) {
 	respondWithJSON(ctx, http.StatusOK, groups)
 }
 
-func groupUpdate(ctx *gin.Context) {
+func GroupUpdate(ctx *gin.Context) {
 	var uri groupUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
@@ -60,7 +60,7 @@ func groupUpdate(ctx *gin.Context) {
 	}
 }
 
-func groupDelete(ctx *gin.Context) {
+func GroupDelete(ctx *gin.Context) {
 	var uri groupUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
@@ -76,7 +76,7 @@ func groupDelete(ctx *gin.Context) {
 	ctx.Status(http.StatusNoContent)
 }
 
-func groupRead(ctx *gin.Context) {
+func GroupRead(ctx *gin.Context) {
 	var uri groupUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
