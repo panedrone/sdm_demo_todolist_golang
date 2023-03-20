@@ -9,7 +9,7 @@
         <delete/>
     </crud>
 
-    <query-dto-list method="GetAllGroupsLI" dto="GroupLi"/>
+    <query-dto-list method="GetAllGroups" dto="GroupLi"/>
 
     <!-- testing -->
     <query-dto dto="GroupLi" method="GetGroupLi(int64 g_id)" ref="get_group.sql"/>
