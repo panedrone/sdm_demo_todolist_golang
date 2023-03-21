@@ -38,6 +38,7 @@ TasksDao.xml
 Generated code in action:
 ```go
 dao := dbal.NewGroupsDao()
+// ---
 err := dao.CreateGroup(ctx, &gr)
 // ---
 groups, err = dao.GetAllGroups(ctx)
