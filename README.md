@@ -45,5 +45,7 @@ groups, err = dao.GetAllGroups(ctx)
 // ---
 group, err = dao.ReadGroup(ctx, uri.GId)
 // ---
+ra, err = dao.UpdateGroup(ctx, group)
+// ---
 ra, err = dao.DeleteGroup(ctx, &models.Group{GId: uri.GId})
 ```
