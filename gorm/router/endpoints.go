@@ -40,16 +40,16 @@ func New() *gin.Engine {
 			group.DELETE("/", GroupDelete)
 			{
 				groupTasks := group.Group("/tasks")
-				groupTasks.GET("/", tasksReadByGroup)
-				groupTasks.POST("/", taskCreate)
+				groupTasks.GET("/", TasksReadByGroup)
+				groupTasks.POST("/", TaskCreate)
 			}
 		}
 	}
 	{
 		task := api.Group("/tasks/:t_id")
-		task.GET("", taskRead)
-		task.PUT("", taskUpdate)
-		task.DELETE("", taskDelete)
+		task.GET("", TaskRead)
+		task.PUT("", TaskUpdate)
+		task.DELETE("", TaskDelete)
 	}
 
 	return r

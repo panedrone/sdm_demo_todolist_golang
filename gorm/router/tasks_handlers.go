@@ -10,39 +10,7 @@ import (
 	"time"
 )
 
-func taskRead(ctx *gin.Context) {
-	var uri taskUri
-	err := ctx.ShouldBindUri(&uri)
-	if err != nil {
-		abortWithBadUri(ctx, err)
-		return
-	}
-	task, err := dbal.NewTasksDao().ReadTask(ctx, uri.TId)
-	if err == gorm.ErrRecordNotFound {
-		abortWithNotFound(ctx, err.Error())
-	} else if err != nil {
-		abortWith500(ctx, err.Error())
-	} else {
-		respondWithJSON(ctx, http.StatusOK, task)
-	}
-}
-
-func tasksReadByGroup(ctx *gin.Context) {
-	var uri groupUri
-	if err := ctx.ShouldBindUri(&uri); err != nil {
-		abortWithBadUri(ctx, err)
-		return
-	}
-	var tasks []*models.TaskLi
-	tasks, err := dbal.NewTasksDao().ReadGroupTasks(ctx, uri.GId)
-	if err != nil {
-		abortWith500(ctx, err.Error())
-		return
-	}
-	respondWithJSON(ctx, http.StatusOK, tasks)
-}
-
-func taskCreate(ctx *gin.Context) {
+func TaskCreate(ctx *gin.Context) {
 	var uri groupUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
@@ -69,25 +37,39 @@ func taskCreate(ctx *gin.Context) {
 	ctx.Status(http.StatusCreated)
 }
 
-func taskDelete(ctx *gin.Context) {
+func TaskRead(ctx *gin.Context) {
 	var uri taskUri
 	err := ctx.ShouldBindUri(&uri)
 	if err != nil {
 		abortWithBadUri(ctx, err)
 		return
 	}
-	task := &models.Task{
-		TId: uri.TId,
+	task, err := dbal.NewTasksDao().ReadTask(ctx, uri.TId)
+	if err == gorm.ErrRecordNotFound {
+		abortWithNotFound(ctx, err.Error())
+	} else if err != nil {
+		abortWith500(ctx, err.Error())
+	} else {
+		respondWithJSON(ctx, http.StatusOK, task)
 	}
-	_, err = dbal.NewTasksDao().DeleteTask(ctx, task)
+}
+
+func TasksReadByGroup(ctx *gin.Context) {
+	var uri groupUri
+	if err := ctx.ShouldBindUri(&uri); err != nil {
+		abortWithBadUri(ctx, err)
+		return
+	}
+	var tasks []*models.TaskLi
+	tasks, err := dbal.NewTasksDao().ReadGroupTasks(ctx, uri.GId)
 	if err != nil {
 		abortWith500(ctx, err.Error())
 		return
 	}
-	ctx.Status(http.StatusNoContent)
+	respondWithJSON(ctx, http.StatusOK, tasks)
 }
 
-func taskUpdate(ctx *gin.Context) {
+func TaskUpdate(ctx *gin.Context) {
 	var uri taskUri
 	err := ctx.ShouldBindUri(&uri)
 	if err != nil {
@@ -128,4 +110,19 @@ func taskUpdate(ctx *gin.Context) {
 		abortWith500(ctx, err.Error())
 		return
 	}
+}
+
+func TaskDelete(ctx *gin.Context) {
+	var uri taskUri
+	err := ctx.ShouldBindUri(&uri)
+	if err != nil {
+		abortWithBadUri(ctx, err)
+		return
+	}
+	_, err = dbal.NewTasksDao().DeleteTask(ctx, &models.Task{TId: uri.TId})
+	if err != nil {
+		abortWith500(ctx, err.Error())
+		return
+	}
+	ctx.Status(http.StatusNoContent)
 }
