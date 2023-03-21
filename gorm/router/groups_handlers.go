@@ -84,10 +84,7 @@ func GroupDelete(ctx *gin.Context) {
 		abortWithBadUri(ctx, err)
 		return
 	}
-	gr := &models.Group{
-		GId: uri.GId,
-	}
-	_, err := dbal.NewGroupsDao().DeleteGroup(ctx, gr)
+	_, err := dbal.NewGroupsDao().DeleteGroup(ctx, &models.Group{GId: uri.GId})
 	if err != nil {
 		abortWith500(ctx, err.Error())
 	}
