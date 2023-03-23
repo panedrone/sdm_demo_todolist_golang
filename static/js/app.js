@@ -16,6 +16,7 @@ new Vue({
         tasks: null,
         t_subject: null,
         current_task: NO_TASK,
+        current_subject: null,
         whoiam: "?",
         task_error: null,
     },
@@ -87,8 +88,7 @@ new Vue({
                 .then(async (resp) => {
                     if (resp.status === 200) {
                         let task = await resp.json()
-                        let subj = document.getElementById("subj");
-                        subj.innerText = task.t_subject;
+                        this.$data.current_subject = task.t_subject;
                         this.$data.current_task = task;
                         this.$data.task_error = null;
                         showTaskDetails();
