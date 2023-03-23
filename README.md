@@ -5,8 +5,6 @@ Both parts are sharing the same Vue.js front-end and the same SQLite3 database.
 
 ![demo-go.png](demo-go.png)
 
-![erd.png](erd.png)
-
 dto.xml
 ```xml
 <dto-class name="gorm-Project" ref="groups"/>
