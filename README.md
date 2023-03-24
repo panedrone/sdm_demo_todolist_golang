@@ -13,7 +13,7 @@ dto.xml
 
     <header>// Group list item</header>
     
-    <field type="int64${json} // PK" column="p_id"/>
+    <field type="int64${json}" column="p_id"/>
     <field type="string${json}" column="p_name"/>
     <field type="int64${json}" column="p_tasks_count"/>
 
