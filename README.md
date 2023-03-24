@@ -2,7 +2,7 @@
 Quick Demo of how to use [SQL DAL Maker](https://github.com/panedrone/sqldalmaker) + Go: 
 
 * Gorm
-* direct "database/sql".
+* direct "database/sql"
 
 Both parts are sharing the same Vue.js front-end and the same SQLite3 database.
 
