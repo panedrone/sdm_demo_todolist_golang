@@ -33,6 +33,7 @@ dto.xml
 ProjectsDao.xml
 ```xml
 <crud dto="gorm-Project" table="groups"/>
+
 <query-dto-list method="GetAllProjects" dto="ProjectLi"/>
 ```
 TasksDao.xml
