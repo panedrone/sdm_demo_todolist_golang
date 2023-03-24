@@ -1,4 +1,4 @@
-# sdm_demo_todolist_sqlite3_golang
+# sdm_demo_todolist_golang
 Quick Demo of how to use [SQL DAL Maker](https://github.com/panedrone/sqldalmaker) + Go: Gorm or direct "database/sql".
 
 Both parts are sharing the same Vue.js front-end and the same SQLite3 database.
