@@ -7,7 +7,7 @@ Both parts are sharing the same Vue.js front-end and the same SQLite3 database.
 
 dto.xml
 ```xml
-    <dto-class name="gorm-Project" ref="projects"/>
+<dto-class name="gorm-Project" ref="projects"/>
 
 <dto-class name="ProjectLi" ref="get_projects.sql">
 
