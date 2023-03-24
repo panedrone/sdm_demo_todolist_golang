@@ -7,9 +7,9 @@ import (
 
 // A hand-coded method extending functionality of generated class TasksDao
 
-func (dao *TasksDao) ReadGroupTasks(ctx context.Context, gId int64) (res []*models.TaskLi, err error) {
+func (dao *TasksDao) ReadProjectTasks(ctx context.Context, pId int64) (res []*models.TaskLi, err error) {
 	// Don't fetch "t_comments" for Group-Tasks list:
-	err = dao.ds.Session(ctx).Table("tasks").Where("g_id = ?", gId).Order("t_date, t_id").
+	err = dao.ds.Session(ctx).Table("tasks").Where("p_id = ?", pId).Order("t_date, t_id").
 		Select("t_id", "t_date", "t_subject", "t_priority").Find(&res).Error
 	return
 }

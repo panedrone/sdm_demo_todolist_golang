@@ -25,24 +25,24 @@ func New() *gin.Engine {
 		ctx.String(http.StatusOK, "database/sql")
 	})
 	{
-		groups := myRouter.Group("/groups")
-		groups.GET("/", groupsReadAll)
-		groups.POST("/", groupCreate)
+		groups := myRouter.Group("/projects")
+		groups.GET("/", ProjectsReadAll)
+		groups.POST("/", ProjectCreate)
 		{
-			group := groups.Group("/:g_id")
-			group.GET("/", groupRead)
-			group.PUT("/", groupUpdate)
-			group.DELETE("/", groupDelete)
+			group := groups.Group("/:p_id")
+			group.GET("/", ProjectRead)
+			group.PUT("/", ProjectUpdate)
+			group.DELETE("/", ProjectDelete)
 			{
 				groupTasks := group.Group("/tasks")
-				groupTasks.GET("/", tasksReadByGroup)
-				groupTasks.POST("/", taskCreate)
+				groupTasks.GET("/", TasksReadByProject)
+				groupTasks.POST("/", TaskCreate)
 			}
 		}
 	}
 	{
 		task := myRouter.Group("/tasks/:t_id")
-		task.GET("", taskRead)
+		task.GET("", TaskRead)
 		task.PUT("", taskUpdate)
 		task.DELETE("", taskDelete)
 	}

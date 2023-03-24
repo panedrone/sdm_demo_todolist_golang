@@ -12,13 +12,13 @@ import (
 
 var tDao = dbal.NewTasksDao()
 
-func tasksReadByGroup(ctx *gin.Context) {
-	var uri groupUri
+func TasksReadByProject(ctx *gin.Context) {
+	var uri projectUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
 		return
 	}
-	tasks, err := tDao.GetGroupTasks(ctx, uri.GId)
+	tasks, err := tDao.GetGroupTasks(ctx, uri.PId)
 	if err != nil {
 		abortWith500(ctx, err.Error())
 		return
@@ -26,7 +26,7 @@ func tasksReadByGroup(ctx *gin.Context) {
 	respondWithJSON(ctx, http.StatusOK, tasks)
 }
 
-func taskRead(ctx *gin.Context) {
+func TaskRead(ctx *gin.Context) {
 	var inTsk taskUri
 	err := ctx.ShouldBindUri(&inTsk)
 	if err != nil {
@@ -43,8 +43,8 @@ func taskRead(ctx *gin.Context) {
 	}
 }
 
-func taskCreate(ctx *gin.Context) {
-	var uri groupUri
+func TaskCreate(ctx *gin.Context) {
+	var uri projectUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
 		return
@@ -56,7 +56,7 @@ func taskCreate(ctx *gin.Context) {
 		return
 	}
 	t := dto.Task{}
-	t.GId = uri.GId
+	t.PId = uri.PId
 	t.TSubject = inTask.TSubject
 	t.TPriority = 1
 	currentTime := time.Now().Local()

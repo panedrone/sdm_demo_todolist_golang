@@ -30,17 +30,17 @@ func New() *gin.Engine {
 		ctx.String(http.StatusOK, "Gorm")
 	})
 	{
-		groups := api.Group("/groups")
-		groups.GET("/", GroupsReadAll)
-		groups.POST("/", GroupCreate)
+		groups := api.Group("/projects")
+		groups.GET("/", ProjectsReadAll)
+		groups.POST("/", ProjectCreate)
 		{
-			group := groups.Group("/:g_id")
-			group.GET("/", GroupRead)
-			group.PUT("/", GroupUpdate)
-			group.DELETE("/", GroupDelete)
+			group := groups.Group("/:p_id")
+			group.GET("/", ProjectRead)
+			group.PUT("/", ProjectUpdate)
+			group.DELETE("/", ProjectDelete)
 			{
 				groupTasks := group.Group("/tasks")
-				groupTasks.GET("/", TasksReadByGroup)
+				groupTasks.GET("/", TasksReadByProject)
 				groupTasks.POST("/", TaskCreate)
 			}
 		}

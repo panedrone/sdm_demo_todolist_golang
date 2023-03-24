@@ -6,7 +6,7 @@ package dto
 
 type Task struct {
 	TId       int64  `json:"t_id"`
-	GId       int64  `json:"g_id"`
+	PId       int64  `json:"p_id"`
 	TPriority int64  `json:"t_priority"`
 	TDate     string `json:"t_date"`
 	TSubject  string `json:"t_subject"`

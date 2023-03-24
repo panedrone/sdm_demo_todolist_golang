@@ -11,7 +11,7 @@ import (
 var ds = &_DS{} // private for this package
 
 func (ds *_DS) initDb() (err error) {
-	ds.rootDb, err = gorm.Open(sqlite.Open("./todo-list.sqlite"), &gorm.Config{
+	ds.rootDb, err = gorm.Open(sqlite.Open("./todolist.sqlite"), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 	return
@@ -42,8 +42,8 @@ func CloseDB() error {
 	return ds.Close()
 }
 
-func NewGroupsDao() *GroupsDao {
-	return &GroupsDao{ds: ds}
+func NewProjectsDao() *ProjectsDao {
+	return &ProjectsDao{ds: ds}
 }
 
 func NewTasksDao() *TasksDao {

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dao-class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="dao.xsd">
+
+    <crud table="projects" dto="Project">
+        <create/>
+        <read/>
+        <update/>
+        <delete/>
+    </crud>
+
+    <query-dto-list method="GetProjects" dto="Project"/>
+
+    <!-- testing -->
+    <query-list method="GetProjectIds" return-type="int64" ref="get_projects.sql"/>
+
+    <!-- testing -->
+    <query method="GetProjectId" return-type="int64" ref="get_projects.sql"/>
+
+</dao-class>

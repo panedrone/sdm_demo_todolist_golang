@@ -4,7 +4,7 @@ package models
 // Additional custom methods can be implemented in a separate file like <this_file>_ex.go.
 // https://sqldalmaker.sourceforge.net/
 
-type Group struct {
-	GId   int64  `json:"g_id" gorm:"column:g_id;primary_key;auto_increment"`
-	GName string `json:"g_name" gorm:"column:g_name;not null"`
+type Project struct {
+	PId   int64  `json:"p_id" gorm:"column:p_id;primary_key;auto_increment"`
+	PName string `json:"p_name" gorm:"column:p_name;not null"`
 }

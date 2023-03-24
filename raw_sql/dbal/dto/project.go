@@ -4,8 +4,8 @@ package dto
 // Additional custom methods can be implemented in a separate file like <this_file>_ex.go.
 // https://sqldalmaker.sourceforge.net/
 
-type Group struct {
-	GId         int64  `json:"g_id"` // PK
-	GName       string `json:"g_name"`
-	GTasksCount int64  `json:"g_tasks_count"`
+type Project struct {
+	PId         int64  `json:"p_id"` // PK
+	PName       string `json:"p_name"`
+	PTasksCount int64  `json:"p_tasks_count"`
 }

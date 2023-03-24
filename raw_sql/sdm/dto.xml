@@ -2,16 +2,18 @@
 <dto-classes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:noNamespaceSchemaLocation="dto.xsd">
 
-    <dto-class name="Group" ref="get_groups.sql">
-        <field type="int64${json} // PK" column="g_id"/>
-        <field type="string${json}" column="g_name"/>
-        <field type="int64${json}" column="g_tasks_count"/>
+    <dto-class name="Project" ref="get_projects.sql">
+        <field type="int64${json} // PK" column="p_id"/>
+        <field type="string${json}" column="p_name"/>
+        <field type="int64${json}" column="p_tasks_count"/>
     </dto-class>
 
     <dto-class name="Task" ref="tasks"/>
 
-    <dto-class name="TaskLi" ref="tasks(g_id) / t_id, t_priority, t_date, t_subject">
-        <header>// TaskLi list item (no g_id, no t_comments)</header>
+    <dto-class name="TaskLi" ref="tasks(p_id) / t_id, t_priority, t_date, t_subject">
+
+        <header>// TaskLi list item (no p_id, no t_comments)</header>
+
     </dto-class>
 
 </dto-classes>

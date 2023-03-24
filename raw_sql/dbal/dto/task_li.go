@@ -4,7 +4,7 @@ package dto
 // Additional custom methods can be implemented in a separate file like <this_file>_ex.go.
 // https://sqldalmaker.sourceforge.net/
 
-// TaskLi list item (no g_id, no t_comments)
+// TaskLi list item (no p_id, no t_comments)
 type TaskLi struct {
 	TId       int64  `json:"t_id"`
 	TPriority int64  `json:"t_priority"`

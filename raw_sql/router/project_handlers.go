@@ -9,18 +9,18 @@ import (
 	"sdm_demo_todolist/raw_sql/dbal/dto"
 )
 
-var gDao = dbal.NewGroupsDao()
+var gDao = dbal.NewProjectsDao()
 
-func groupCreate(ctx *gin.Context) {
-	var inGr groupCreateUpdate
+func ProjectCreate(ctx *gin.Context) {
+	var inGr projectCreateUpdate
 	err := ctx.ShouldBindJSON(&inGr)
 	if err != nil {
 		abortWithBadRequest(ctx, err.Error())
 		return
 	}
-	gr := dto.Group{}
-	gr.GName = inGr.GName
-	err = gDao.CreateGroup(ctx, &gr)
+	gr := dto.Project{}
+	gr.PName = inGr.PName
+	err = gDao.CreateProject(ctx, &gr)
 	if err != nil {
 		abortWith500(ctx, err.Error())
 		return
@@ -28,8 +28,8 @@ func groupCreate(ctx *gin.Context) {
 	ctx.Status(http.StatusCreated)
 }
 
-func groupsReadAll(ctx *gin.Context) {
-	groups, err := gDao.GetGroups(ctx)
+func ProjectsReadAll(ctx *gin.Context) {
+	groups, err := gDao.GetProjects(ctx)
 	if err != nil {
 		abortWith500(ctx, err.Error())
 		return
@@ -37,13 +37,13 @@ func groupsReadAll(ctx *gin.Context) {
 	respondWithJSON(ctx, http.StatusOK, groups)
 }
 
-func groupRead(ctx *gin.Context) {
-	var uri groupUri
+func ProjectRead(ctx *gin.Context) {
+	var uri projectUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
 		return
 	}
-	group, err := gDao.ReadGroup(ctx, uri.GId)
+	group, err := gDao.ReadProject(ctx, uri.PId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			abortWithNotFound(ctx, err.Error())
@@ -55,40 +55,41 @@ func groupRead(ctx *gin.Context) {
 	respondWithJSON(ctx, http.StatusOK, group)
 }
 
-func groupUpdate(ctx *gin.Context) {
-	var uri groupUri
+func ProjectUpdate(ctx *gin.Context) {
+	var uri projectUri
 	if err := ctx.BindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
 		return
 	}
-	var inGr groupCreateUpdate
-	err := ctx.ShouldBindJSON(&inGr)
+	var inProject projectCreateUpdate
+	err := ctx.ShouldBindJSON(&inProject)
 	if err != nil {
 		abortWithBadRequest(ctx, fmt.Sprintf("Invalid JSON: %s", err.Error()))
 		return
 	}
-	gr, err := gDao.ReadGroup(ctx, uri.GId)
+	rowsAffected, err := gDao.UpdateProject(ctx, &dto.Project{PName: inProject.PName})
 	if err != nil {
 		abortWith500(ctx, err.Error())
 		return
 	}
-	gr.GName = inGr.GName
-	_, err = gDao.UpdateGroup(ctx, gr)
-	if err != nil {
+	if rowsAffected != 1 {
 		abortWith500(ctx, err.Error())
 		return
 	}
 }
 
-func groupDelete(ctx *gin.Context) {
-	var uri groupUri
+func ProjectDelete(ctx *gin.Context) {
+	var uri projectUri
 	if err := ctx.BindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
 		return
 	}
-	gr := dto.Group{GId: uri.GId}
-	_, err := gDao.DeleteGroup(ctx, &gr)
+	rowsAffected, err := gDao.DeleteProject(ctx, &dto.Project{PId: uri.PId})
 	if err != nil {
+		abortWith500(ctx, err.Error())
+		return
+	}
+	if rowsAffected != 1 {
 		abortWith500(ctx, err.Error())
 		return
 	}

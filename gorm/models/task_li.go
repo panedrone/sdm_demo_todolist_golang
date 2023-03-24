@@ -4,7 +4,7 @@ package models
 // Additional custom methods can be implemented in a separate file like <this_file>_ex.go.
 // https://sqldalmaker.sourceforge.net/
 
-// TaskLi list item (no g_id, no t_comments)
+// Task list item (no p_id, no t_comments)
 type TaskLi struct {
 	TId       int64  `json:"t_id" gorm:"column:t_id;primary_key;auto_increment"`
 	TPriority int64  `json:"t_priority" gorm:"column:t_priority;not null"`

@@ -13,7 +13,7 @@
     <cpp class-prefix=""/>
 
     <jdbc jar="raw_sql/sdm/sqlite-jdbc-3.40.0.0.jar" class="org.sqlite.JDBC"
-          url="jdbc:sqlite:$PROJECT_DIR$/todo-list.sqlite" user="" pwd=""/>
+          url="jdbc:sqlite:$PROJECT_DIR$/todolist.sqlite" user="" pwd=""/>
 
     <type-map default="">
         <type detected="java.lang.Integer" target="int64${json}"/>

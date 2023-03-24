@@ -17,8 +17,8 @@ type TasksDao struct {
 // Generated/AI values are passed to DTO/model.
 
 func (dao *TasksDao) CreateTask(ctx context.Context, p *dto.Task) (err error) {
-	sql := `insert into tasks (g_id, t_priority, t_date, t_subject, t_comments) values (?, ?, ?, ?, ?)`
-	res, err := dao.ds.Insert(ctx, sql, "t_id", p.GId, p.TPriority, p.TDate, p.TSubject, p.TComments)
+	sql := `insert into tasks (p_id, t_priority, t_date, t_subject, t_comments) values (?, ?, ?, ?, ?)`
+	res, err := dao.ds.Insert(ctx, sql, "t_id", p.PId, p.TPriority, p.TDate, p.TSubject, p.TComments)
 	if err == nil {
 		err = assign(&p.TId, res)
 	}
@@ -32,7 +32,7 @@ func (dao *TasksDao) ReadTask(ctx context.Context, tId int64) (res *dto.Task, er
 	res = &dto.Task{}
 	_fa := []interface{}{
 		&res.TId,
-		&res.GId,
+		&res.PId,
 		&res.TPriority,
 		&res.TDate,
 		&res.TSubject,
@@ -45,8 +45,8 @@ func (dao *TasksDao) ReadTask(ctx context.Context, tId int64) (res *dto.Task, er
 // CR(U)D: tasks
 
 func (dao *TasksDao) UpdateTask(ctx context.Context, p *dto.Task) (rowsAffected int64, err error) {
-	sql := `update tasks set g_id=?, t_priority=?, t_date=?, t_subject=?, t_comments=? where t_id=?`
-	rowsAffected, err = dao.ds.Exec(ctx, sql, p.GId, p.TPriority, p.TDate, p.TSubject, p.TComments, p.TId)
+	sql := `update tasks set p_id=?, t_priority=?, t_date=?, t_subject=?, t_comments=? where t_id=?`
+	rowsAffected, err = dao.ds.Exec(ctx, sql, p.PId, p.TPriority, p.TDate, p.TSubject, p.TComments, p.TId)
 	return
 }
 
@@ -59,7 +59,7 @@ func (dao *TasksDao) DeleteTask(ctx context.Context, p *dto.Task) (rowsAffected 
 }
 
 func (dao *TasksDao) GetGroupTasks(ctx context.Context, gId int64) (res []*dto.TaskLi, err error) {
-	sql := `select t_id, t_priority, t_date, t_subject from tasks where g_id =? 
+	sql := `select t_id, t_priority, t_date, t_subject from tasks where p_id =? 
 		order by t_id`
 	_onRow := func() (interface{}, func()) {
 		_obj := &dto.TaskLi{}
@@ -77,7 +77,7 @@ func (dao *TasksDao) GetGroupTasks(ctx context.Context, gId int64) (res []*dto.T
 }
 
 func (dao *TasksDao) DeleteGroupTasks(ctx context.Context, gId string) (rowsAffected int64, err error) {
-	sql := `delete from tasks where g_id=?`
+	sql := `delete from tasks where p_id=?`
 	rowsAffected, err = dao.ds.Exec(ctx, sql, gId)
 	return
 }
@@ -92,7 +92,7 @@ func (dao *TasksDao) GetCount(ctx context.Context) (res int64, err error) {
 }
 
 func (dao *TasksDao) GetGroupTasks2(ctx context.Context, gId int64) (res []*dto.TaskLi, err error) {
-	sql := `select t_id, t_priority, t_date, t_subject from tasks where g_id=?`
+	sql := `select t_id, t_priority, t_date, t_subject from tasks where p_id=?`
 	_onRow := func() (interface{}, func()) {
 		_obj := &dto.TaskLi{}
 		return []interface{}{

@@ -4,6 +4,6 @@
 
     <crud dto="gorm-Task" table="tasks"/>
 
-    <exec-dml ref="delete from tasks where g_id=?" method="delete_all_group_tasks(g_id)"/>
+    <exec-dml ref="delete from tasks where p_id=?" method="DeleteProjectTasks(p_id)"/>
 
 </dao-class>

@@ -9,9 +9,9 @@
         <delete/>
     </crud>
 
-    <query-dto-list method="GetGroupTasks(int64 gId)" ref="get_group_tasks.sql" dto="TaskLi"/>
+    <query-dto-list method="GetGroupTasks(int64 gId)" ref="get_project_tasks.sql" dto="TaskLi"/>
 
-    <exec-dml method="DeleteGroupTasks(gId)" ref="delete_group_tasks.sql"/>
+    <exec-dml method="DeleteGroupTasks(gId)" ref="delete_project_tasks.sql"/>
 
      <!-- testing -->
     <query method="GetCount()" ref="select count(*) from tasks" return-type="int64"/>

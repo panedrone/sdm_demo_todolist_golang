@@ -50,8 +50,8 @@ func (dao *TasksDao) DeleteTask(ctx context.Context, p *models.Task) (rowsAffect
 	return
 }
 
-func (dao *TasksDao) DeleteAllGroupTasks(ctx context.Context, gId string) (rowsAffected int64, err error) {
-	sql := `delete from tasks where g_id=?`
-	rowsAffected, err = dao.ds.Exec(ctx, sql, gId)
+func (dao *TasksDao) DeleteProjectTasks(ctx context.Context, pId string) (rowsAffected int64, err error) {
+	sql := `delete from tasks where p_id=?`
+	rowsAffected, err = dao.ds.Exec(ctx, sql, pId)
 	return
 }

@@ -11,19 +11,19 @@ import (
 )
 
 func TaskCreate(ctx *gin.Context) {
-	var uri groupUri
+	var uri ProjectUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
 		return
 	}
-	var inTask newTask
+	var inTask NewTask
 	err := ctx.ShouldBindJSON(&inTask)
 	if err != nil {
 		abortWithBadRequest(ctx, err.Error())
 		return
 	}
 	t := models.Task{}
-	t.GId = uri.GId
+	t.PId = uri.PId
 	t.TSubject = inTask.TSubject
 	t.TPriority = 1
 	currentTime := time.Now().Local()
@@ -38,7 +38,7 @@ func TaskCreate(ctx *gin.Context) {
 }
 
 func TaskRead(ctx *gin.Context) {
-	var uri taskUri
+	var uri TaskUri
 	err := ctx.ShouldBindUri(&uri)
 	if err != nil {
 		abortWithBadUri(ctx, err)
@@ -54,14 +54,14 @@ func TaskRead(ctx *gin.Context) {
 	}
 }
 
-func TasksReadByGroup(ctx *gin.Context) {
-	var uri groupUri
+func TasksReadByProject(ctx *gin.Context) {
+	var uri ProjectUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
 		return
 	}
 	var tasks []*models.TaskLi
-	tasks, err := dbal.NewTasksDao().ReadGroupTasks(ctx, uri.GId)
+	tasks, err := dbal.NewTasksDao().ReadProjectTasks(ctx, uri.PId)
 	if err != nil {
 		abortWith500(ctx, err.Error())
 		return
@@ -70,7 +70,7 @@ func TasksReadByGroup(ctx *gin.Context) {
 }
 
 func TaskUpdate(ctx *gin.Context) {
-	var uri taskUri
+	var uri TaskUri
 	err := ctx.ShouldBindUri(&uri)
 	if err != nil {
 		abortWithBadUri(ctx, err)
@@ -113,7 +113,7 @@ func TaskUpdate(ctx *gin.Context) {
 }
 
 func TaskDelete(ctx *gin.Context) {
-	var uri taskUri
+	var uri TaskUri
 	err := ctx.ShouldBindUri(&uri)
 	if err != nil {
 		abortWithBadUri(ctx, err)
