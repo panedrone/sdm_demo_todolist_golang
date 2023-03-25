@@ -13,7 +13,7 @@ import (
 var tDao = dbal.NewTasksDao()
 
 func TasksReadByProject(ctx *gin.Context) {
-	var uri projectUri
+	var uri ProjectUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
 		return
@@ -27,7 +27,7 @@ func TasksReadByProject(ctx *gin.Context) {
 }
 
 func TaskRead(ctx *gin.Context) {
-	var inTsk taskUri
+	var inTsk TaskUri
 	err := ctx.ShouldBindUri(&inTsk)
 	if err != nil {
 		abortWithBadRequest(ctx, err.Error())
@@ -44,12 +44,12 @@ func TaskRead(ctx *gin.Context) {
 }
 
 func TaskCreate(ctx *gin.Context) {
-	var uri projectUri
+	var uri ProjectUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
 		return
 	}
-	var inTask newTask
+	var inTask NewTask
 	err := ctx.ShouldBindJSON(&inTask)
 	if err != nil {
 		abortWithBadRequest(ctx, err.Error())
@@ -71,7 +71,7 @@ func TaskCreate(ctx *gin.Context) {
 }
 
 func taskUpdate(ctx *gin.Context) {
-	var inTsk taskUri
+	var inTsk TaskUri
 	err := ctx.ShouldBindUri(&inTsk)
 	if err != nil {
 		abortWithBadUri(ctx, err)
@@ -113,7 +113,7 @@ func taskUpdate(ctx *gin.Context) {
 }
 
 func taskDelete(ctx *gin.Context) {
-	var inTsk taskUri
+	var inTsk TaskUri
 	err := ctx.ShouldBindUri(&inTsk)
 	if err != nil {
 		abortWithBadUri(ctx, err)

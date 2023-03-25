@@ -6,19 +6,19 @@ import (
 	"net/http"
 )
 
-type projectUri struct {
+type ProjectUri struct {
 	PId int64 `uri:"p_id" binding:"required"`
 }
 
-type projectCreateUpdate struct {
+type ProjectCreateUpdate struct {
 	PName string `json:"p_name" binding:"required,lte=256"`
 }
 
-type taskUri struct {
+type TaskUri struct {
 	TId int64 `uri:"t_id" binding:"required"`
 }
 
-type newTask struct {
+type NewTask struct {
 	TSubject string `json:"t_subject" binding:"required,lte=256"`
 }
 
@@ -29,6 +29,7 @@ type Err struct {
 func abortWithBadUri(ctx *gin.Context, err error) {
 	abortWithBadRequest(ctx, fmt.Sprintf("Invalid URI: %s", err.Error()))
 }
+
 func abortWithBadRequest(ctx *gin.Context, message string) {
 	abortWithError(ctx, http.StatusBadRequest, message)
 }

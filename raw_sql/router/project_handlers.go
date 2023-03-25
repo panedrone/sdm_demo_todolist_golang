@@ -12,7 +12,7 @@ import (
 var gDao = dbal.NewProjectsDao()
 
 func ProjectCreate(ctx *gin.Context) {
-	var inGr projectCreateUpdate
+	var inGr ProjectCreateUpdate
 	err := ctx.ShouldBindJSON(&inGr)
 	if err != nil {
 		abortWithBadRequest(ctx, err.Error())
@@ -38,7 +38,7 @@ func ProjectsReadAll(ctx *gin.Context) {
 }
 
 func ProjectRead(ctx *gin.Context) {
-	var uri projectUri
+	var uri ProjectUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
 		return
@@ -56,12 +56,12 @@ func ProjectRead(ctx *gin.Context) {
 }
 
 func ProjectUpdate(ctx *gin.Context) {
-	var uri projectUri
+	var uri ProjectUri
 	if err := ctx.BindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
 		return
 	}
-	var inProject projectCreateUpdate
+	var inProject ProjectCreateUpdate
 	err := ctx.ShouldBindJSON(&inProject)
 	if err != nil {
 		abortWithBadRequest(ctx, fmt.Sprintf("Invalid JSON: %s", err.Error()))
@@ -79,7 +79,7 @@ func ProjectUpdate(ctx *gin.Context) {
 }
 
 func ProjectDelete(ctx *gin.Context) {
-	var uri projectUri
+	var uri ProjectUri
 	if err := ctx.BindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
 		return
