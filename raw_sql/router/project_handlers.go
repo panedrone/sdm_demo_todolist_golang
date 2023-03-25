@@ -29,7 +29,7 @@ func ProjectCreate(ctx *gin.Context) {
 }
 
 func ProjectsReadAll(ctx *gin.Context) {
-	groups, err := gDao.GetProjects(ctx)
+	groups, err := gDao.GetProjectList(ctx)
 	if err != nil {
 		abortWith500(ctx, err.Error())
 		return
