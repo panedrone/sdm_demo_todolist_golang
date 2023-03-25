@@ -26,7 +26,7 @@ func ProjectCreate(ctx *gin.Context) {
 }
 
 func ProjectsReadAll(ctx *gin.Context) {
-	groups, err := dbal.NewProjectsDao().GetProjectList(ctx)
+	groups, err := dbal.NewProjectsDao().ReadProjectList(ctx)
 	if err != nil {
 		abortWith500(ctx, err.Error())
 		return

@@ -37,7 +37,7 @@ ProjectsDao.xml
 ```xml
 <crud dto="gorm-Project" table="groups"/>
 
-<query-dto-list method="GetProjectList" dto="ProjectLi"/>
+<query-dto-list method="ReadProjectList" dto="ProjectLi"/>
 ```
 TasksDao.xml
 ```xml
@@ -49,7 +49,7 @@ dao := dbal.NewProjectsDao()
 // ---
 err := dao.CreateProject(ctx, &project)
 // ---
-groups, err = dao.GetProjectList(ctx)
+groups, err = dao.ReadProjectList(ctx)
 // ---
 group, err = dao.ReadProject(ctx, uri.PId)
 // ---
