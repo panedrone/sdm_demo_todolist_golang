@@ -9,7 +9,7 @@
         <delete/>
     </crud>
 
-    <query-dto-list method="GetAllProjects" dto="ProjectLi"/>
+    <query-dto-list method="GetProjectList" dto="ProjectLi"/>
 
     <!-- testing -->
     <query-list method="GetProjectLIds()" ref="get_projects.sql" return-type="int64"/>
