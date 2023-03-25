@@ -5,7 +5,7 @@ package dto
 // https://sqldalmaker.sourceforge.net/
 
 type Project struct {
-	PId         int64  `json:"p_id"` // PK
+	PId         int64  `json:"p_id"`
 	PName       string `json:"p_name"`
 	PTasksCount int64  `json:"p_tasks_count"`
 }

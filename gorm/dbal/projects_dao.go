@@ -43,7 +43,7 @@ func (dao *ProjectsDao) DeleteProject(ctx context.Context, p *models.Project) (r
 	return
 }
 
-func (dao *ProjectsDao) GetAllProjects(ctx context.Context) (res []*models.ProjectLi, err error) {
+func (dao *ProjectsDao) GetProjectList(ctx context.Context) (res []*models.ProjectLi, err error) {
 	sql := `select p.*, 
 		(select count(*) from tasks where p_id=p.p_id) as p_tasks_count 
 		from projects p 

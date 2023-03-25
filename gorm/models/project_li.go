@@ -4,9 +4,9 @@ package models
 // Additional custom methods can be implemented in a separate file like <this_file>_ex.go.
 // https://sqldalmaker.sourceforge.net/
 
-// Group list item
+// Project list item
 type ProjectLi struct {
-	PId         int64  `json:"p_id"` // PK
+	PId         int64  `json:"p_id"`
 	PName       string `json:"p_name"`
 	PTasksCount int64  `json:"p_tasks_count"`
 }
