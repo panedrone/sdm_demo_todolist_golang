@@ -2,7 +2,7 @@
 <dao-class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="dao.xsd">
 
-    <crud dto="gorm-Project" table="projects">
+    <crud dto="gorm-Project">
         <create/>
         <read/>
         <update/>

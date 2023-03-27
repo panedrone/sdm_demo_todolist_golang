@@ -2,7 +2,7 @@
 <dao-class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="dao.xsd">
 
-    <crud dto="gorm-Task" table="tasks"/>
+    <crud dto="gorm-Task"/>
 
     <exec-dml ref="delete from tasks where p_id=?" method="DeleteProjectTasks(p_id)"/>
 

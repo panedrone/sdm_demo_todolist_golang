@@ -35,13 +35,13 @@ dto.xml
 ```
 ProjectsDao.xml
 ```xml
-<crud dto="gorm-Project" table="groups"/>
+<crud dto="gorm-Project"/>
 
 <query-dto-list method="ReadProjectList" dto="ProjectLi"/>
 ```
 TasksDao.xml
 ```xml
-<crud dto="gorm-Task" table="tasks"/>
+<crud dto="gorm-Task"/>
 ```
 Generated code in action:
 ```go
