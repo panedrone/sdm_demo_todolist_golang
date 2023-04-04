@@ -16,9 +16,8 @@ type ProjectsDao struct {
 // (C)RUD: projects
 // Generated/AI values are passed to DTO/model.
 
-func (dao *ProjectsDao) CreateProject(ctx context.Context, p *models.Project) (err error) {
-	err = dao.ds.Create(ctx, "projects", p)
-	return
+func (dao *ProjectsDao) CreateProject(ctx context.Context, p *models.Project) error {
+	return dao.ds.Create(ctx, "projects", p)
 }
 
 // C(R)UD: projects
@@ -60,12 +59,12 @@ func (dao *ProjectsDao) GetProjectLIds(ctx context.Context) (res []int64, err er
 	errMap := make(map[string]int)
 	onRow := func(val interface{}) {
 		var data int64
-		fromVal(&data, val, errMap)
+		SetScalarValue(&data, val, errMap)
 		res = append(res, data)
 	}
 	err = dao.ds.QueryAll(ctx, sql, onRow)
 	if err == nil {
-		err = errMapToErr(errMap)
+		err = ErrMapToErr(errMap)
 	}
 	return
 }

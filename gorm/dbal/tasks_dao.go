@@ -16,9 +16,8 @@ type TasksDao struct {
 // (C)RUD: tasks
 // Generated/AI values are passed to DTO/model.
 
-func (dao *TasksDao) CreateTask(ctx context.Context, p *models.Task) (err error) {
-	err = dao.ds.Create(ctx, "tasks", p)
-	return
+func (dao *TasksDao) CreateTask(ctx context.Context, p *models.Task) error {
+	return dao.ds.Create(ctx, "tasks", p)
 }
 
 // C(R)UD: tasks

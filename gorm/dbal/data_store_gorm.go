@@ -827,7 +827,8 @@ func (ds *_DS) _formatSQL(sqlStr string) string {
 	return sqlStr
 }
 
-func _getValue(row map[string]interface{}, colName string, errMap map[string]int) (value interface{}, ok bool) {
+func _getValue(row map[string]interface{}, colName string, errMap map[string]int) (value interface{}, err error) {
+	var ok bool
 	value, ok = row[colName]
 	if !ok {
 		key := fmt.Sprintf("%s: no such column", colName)
@@ -837,22 +838,23 @@ func _getValue(row map[string]interface{}, colName string, errMap map[string]int
 		} else {
 			errMap[key] = 1
 		}
+		err = errors.New(key)
 		return
 	}
 	return
 }
 
-func AssignErr(dstPtr interface{}, value interface{}, funcName string, errMsg string) error {
+func assignErr(dstPtr interface{}, value interface{}, funcName string, errMsg string) error {
 	return errors.New(fmt.Sprintf("%s %T <- %T %s", funcName, dstPtr, value, errMsg))
 }
 
-func UnknownTypeErr(dstPtr interface{}, value interface{}, funcName string) error {
-	return AssignErr(dstPtr, value, funcName, "unknown type")
+func unknownTypeErr(dstPtr interface{}, value interface{}, funcName string) error {
+	return assignErr(dstPtr, value, funcName, "unknown type")
 }
 
 func SetString(d *string, row map[string]interface{}, colName string, errMap map[string]int) error {
-	value, ok := _getValue(row, colName, errMap)
-	if ok {
+	value, err := _getValue(row, colName, errMap)
+	if err == nil {
 		return _setString(d, value)
 	}
 	return nil
@@ -871,17 +873,17 @@ func _setString(d *string, value interface{}) error {
 	case time.Time:
 		*d = v.Format("2006-01-02 15:04:05")
 	default:
-		return UnknownTypeErr(d, value, "_setString")
+		return unknownTypeErr(d, value, "_setString")
 	}
 	return nil
 }
 
 func SetInt64(d *int64, row map[string]interface{}, colName string, errMap map[string]int) error {
-	value, ok := _getValue(row, colName, errMap)
-	if ok {
+	value, err := _getValue(row, colName, errMap)
+	if err == nil {
 		return _setInt64(d, value)
 	}
-	return nil
+	return err
 }
 
 func _setInt64(d *int64, value interface{}) error {
@@ -898,28 +900,28 @@ func _setInt64(d *int64, value interface{}) error {
 		str := string(v)
 		i64, err := strconv.ParseInt(str, 10, 64)
 		if err != nil {
-			return AssignErr(d, value, "_setInt64", err.Error())
+			return assignErr(d, value, "_setInt64", err.Error())
 		}
 		*d = i64
 	case string:
 		str := value.(string)
 		i64, err := strconv.ParseInt(str, 10, 64)
 		if err != nil {
-			return AssignErr(d, value, "_setInt64", err.Error())
+			return assignErr(d, value, "_setInt64", err.Error())
 		}
 		*d = i64
 	default:
-		return UnknownTypeErr(d, value, "_setInt64")
+		return unknownTypeErr(d, value, "_setInt64")
 	}
 	return nil
 }
 
 func SetInt32(d *int32, row map[string]interface{}, colName string, errMap map[string]int) error {
-	value, ok := _getValue(row, colName, errMap)
-	if ok {
+	value, err := _getValue(row, colName, errMap)
+	if err == nil {
 		return _setInt32(d, value)
 	}
-	return nil
+	return err
 }
 
 func _setInt32(d *int32, value interface{}) error {
@@ -936,27 +938,27 @@ func _setInt32(d *int32, value interface{}) error {
 		str := string(v)
 		d64, err := strconv.ParseInt(str, 10, 32)
 		if err != nil {
-			return AssignErr(d, value, "_setInt32", err.Error())
+			return assignErr(d, value, "_setInt32", err.Error())
 		}
 		*d = int32(d64)
 	case string:
 		d64, err := strconv.ParseInt(v, 10, 32)
 		if err != nil {
-			return AssignErr(d, value, "_setInt32", err.Error())
+			return assignErr(d, value, "_setInt32", err.Error())
 		}
 		*d = int32(d64)
 	default:
-		return UnknownTypeErr(d, value, "_setInt32")
+		return unknownTypeErr(d, value, "_setInt32")
 	}
 	return nil
 }
 
 func SetFloat32(d *float32, row map[string]interface{}, colName string, errMap map[string]int) error {
-	value, ok := _getValue(row, colName, errMap)
-	if ok {
+	value, err := _getValue(row, colName, errMap)
+	if err == nil {
 		return _setFloat32(d, value)
 	}
-	return nil
+	return err
 }
 
 func _setFloat32(d *float32, value interface{}) error {
@@ -969,27 +971,27 @@ func _setFloat32(d *float32, value interface{}) error {
 		str := string(v) // PostgeSQL
 		d64, err := strconv.ParseFloat(str, 64)
 		if err != nil {
-			return AssignErr(d, value, "_setFloat32", err.Error())
+			return assignErr(d, value, "_setFloat32", err.Error())
 		}
 		*d = float32(d64)
 	case string:
 		d64, err := strconv.ParseFloat(v, 64) // Oracle
 		if err != nil {
-			return AssignErr(d, value, "_setFloat32", err.Error())
+			return assignErr(d, value, "_setFloat32", err.Error())
 		}
 		*d = float32(d64)
 	default:
-		return UnknownTypeErr(d, value, "_setFloat32")
+		return unknownTypeErr(d, value, "_setFloat32")
 	}
 	return nil
 }
 
 func SetFloat64(d *float64, row map[string]interface{}, colName string, errMap map[string]int) error {
-	value, ok := _getValue(row, colName, errMap)
-	if ok {
+	value, err := _getValue(row, colName, errMap)
+	if err == nil {
 		return _setFloat64(d, value)
 	}
-	return nil
+	return err
 }
 
 func _setFloat64(d *float64, value interface{}) error {
@@ -1003,26 +1005,26 @@ func _setFloat64(d *float64, value interface{}) error {
 		var err error
 		*d, err = strconv.ParseFloat(str, 64)
 		if err != nil {
-			return AssignErr(d, value, "_setFloat64", err.Error())
+			return assignErr(d, value, "_setFloat64", err.Error())
 		}
 	case string:
 		var err error
 		*d, err = strconv.ParseFloat(v, 64) // Oracle
 		if err != nil {
-			return AssignErr(d, value, "_setFloat64", err.Error())
+			return assignErr(d, value, "_setFloat64", err.Error())
 		}
 	default:
-		return UnknownTypeErr(d, value, "_setFloat64")
+		return unknownTypeErr(d, value, "_setFloat64")
 	}
 	return nil
 }
 
 func SetTime(d *time.Time, row map[string]interface{}, colName string, errMap map[string]int) error {
-	value, ok := _getValue(row, colName, errMap)
-	if ok {
+	value, err := _getValue(row, colName, errMap)
+	if err == nil {
 		return _setTime(d, value)
 	}
-	return nil
+	return err
 }
 
 func _setTime(d *time.Time, value interface{}) error {
@@ -1030,17 +1032,17 @@ func _setTime(d *time.Time, value interface{}) error {
 	case time.Time:
 		*d = v
 	default:
-		return UnknownTypeErr(d, value, "_setTime")
+		return unknownTypeErr(d, value, "_setTime")
 	}
 	return nil
 }
 
 func SetBool(d *bool, row map[string]interface{}, colName string, errMap map[string]int) error {
-	value, ok := _getValue(row, colName, errMap)
-	if ok {
+	value, err := _getValue(row, colName, errMap)
+	if err == nil {
 		return _setBool(d, value)
 	}
-	return nil
+	return err
 }
 
 func _setBool(d *bool, value interface{}) error {
@@ -1049,13 +1051,13 @@ func _setBool(d *bool, value interface{}) error {
 		str := string(v) // MySQL
 		db, err := strconv.ParseBool(str)
 		if err != nil {
-			return AssignErr(d, value, "_setBool", err.Error())
+			return assignErr(d, value, "_setBool", err.Error())
 		}
 		*d = db
 	case bool:
 		*d = v
 	default:
-		return UnknownTypeErr(d, value, "_setBool")
+		return unknownTypeErr(d, value, "_setBool")
 	}
 	return nil
 }
@@ -1091,7 +1093,7 @@ func _setAny(dstPtr interface{}, value interface{}) error {
 			*d = bv
 			return nil
 		default:
-			return UnknownTypeErr(d, value, "_setAny")
+			return unknownTypeErr(d, value, "_setAny")
 		}
 	//case *godror.Number:
 	//	switch v := value.(type) {
@@ -1175,8 +1177,8 @@ func SetScalarValue(dstPtr interface{}, value interface{}, errMap map[string]int
 }
 
 func SetAny(dstPtr interface{}, row map[string]interface{}, colName string, errMap map[string]int) {
-	value, ok := _getValue(row, colName, errMap)
-	if !ok {
+	value, err := _getValue(row, colName, errMap)
+	if err != nil {
 		return
 	}
 	SetScalarValue(dstPtr, value, errMap)
