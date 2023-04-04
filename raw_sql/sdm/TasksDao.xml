@@ -2,12 +2,7 @@
 <dao-class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="dao.xsd">
 
-    <crud table="tasks" dto="Task">
-        <create/>
-        <read/>
-        <update/>
-        <delete/>
-    </crud>
+    <crud table="tasks" dto="Task"/>
 
     <query-dto-list method="GetGroupTasks(int64 gId)" ref="get_project_tasks.sql" dto="TaskLi"/>
 

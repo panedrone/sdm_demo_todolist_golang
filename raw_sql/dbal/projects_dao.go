@@ -16,29 +16,29 @@ type ProjectsDao struct {
 // (C)RUD: projects
 // Generated/AI values are passed to DTO/model.
 
-func (dao *ProjectsDao) CreateProject(ctx context.Context, p *dto.Project) (err error) {
+func (dao *ProjectsDao) CreateProject(ctx context.Context, p *dto.Project) error {
 	sql := `insert into projects (p_name) values (?)`
-	res, err := dao.ds.Insert(ctx, sql, "p_id", p.PName)
+	row, err := dao.ds.Insert(ctx, sql, "p_id", p.PName)
 	if err == nil {
-		err = SetRes(&p.PId, res)
+		err = SetRes(&p.PId, row)
 	}
-	return
+	return err
 }
 
 // C(R)UD: projects
 
-func (dao *ProjectsDao) ReadProject(ctx context.Context, pId int64) (res *dto.Project, err error) {
+func (dao *ProjectsDao) ReadProject(ctx context.Context, pId int64) (*dto.Project, error) {
 	sql := `select * from projects where p_id=?`
 	row, err := dao.ds.QueryRow(ctx, sql, pId)
 	if err != nil {
-		return
+		return nil, err
 	}
-	res = &dto.Project{}
+	res := dto.Project{}
 	errMap := make(map[string]int)
 	SetInt64(&res.PId, row, "p_id", errMap)
 	SetString(&res.PName, row, "p_name", errMap)
 	err = ErrMapToErr(errMap)
-	return
+	return &res, err
 }
 
 // CR(U)D: projects
@@ -95,14 +95,15 @@ func (dao *ProjectsDao) GetProjectIds(ctx context.Context) (res []int64, err err
 	return
 }
 
-func (dao *ProjectsDao) GetProjectId(ctx context.Context) (res int64, err error) {
+func (dao *ProjectsDao) GetProjectId(ctx context.Context) (int64, error) {
 	sql := `select p.*, 
 		(select count(*) from tasks where p_id=p.p_id) as p_tasks_count 
 		from projects p 
 		order by p.p_id`
 	r, err := dao.ds.Query(ctx, sql)
+	var res int64
 	if err == nil {
 		err = SetRes(&res, r)
 	}
-	return
+	return res, err
 }

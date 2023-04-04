@@ -22,10 +22,10 @@ func (dao *ProjectsDao) CreateProject(ctx context.Context, p *models.Project) er
 
 // C(R)UD: projects
 
-func (dao *ProjectsDao) ReadProject(ctx context.Context, pId int64) (res *models.Project, err error) {
-	res = &models.Project{}
-	err = dao.ds.Read(ctx, "projects", res, pId)
-	return
+func (dao *ProjectsDao) ReadProject(ctx context.Context, pId int64) (*models.Project, error) {
+	res := &models.Project{}
+	err := dao.ds.Read(ctx, "projects", res, pId)
+	return res, err
 }
 
 // CR(U)D: projects

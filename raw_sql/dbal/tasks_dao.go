@@ -16,24 +16,46 @@ type TasksDao struct {
 // (C)RUD: tasks
 // Generated/AI values are passed to DTO/model.
 
-func (dao *TasksDao) CreateTask(ctx context.Context, p *dto.Task) (err error) {
+func (dao *TasksDao) CreateTask(ctx context.Context, p *dto.Task) error {
 	sql := `insert into tasks (p_id, t_priority, t_date, t_subject, t_comments) values (?, ?, ?, ?, ?)`
-	res, err := dao.ds.Insert(ctx, sql, "t_id", p.PId, p.TPriority, p.TDate, p.TSubject, p.TComments)
+	row, err := dao.ds.Insert(ctx, sql, "t_id", p.PId, p.TPriority, p.TDate, p.TSubject, p.TComments)
 	if err == nil {
-		err = SetRes(&p.TId, res)
+		err = SetRes(&p.TId, row)
+	}
+	return err
+}
+
+// C(R)UD: tasks
+
+func (dao *TasksDao) ReadTaskList(ctx context.Context) (res []*dto.Task, err error) {
+	sql := `select * from tasks`
+	errMap := make(map[string]int)
+	_onRow := func(row map[string]interface{}) {
+		obj := dto.Task{}
+		SetInt64(&obj.TId, row, "t_id", errMap)
+		SetInt64(&obj.PId, row, "p_id", errMap)
+		SetInt64(&obj.TPriority, row, "t_priority", errMap)
+		SetString(&obj.TDate, row, "t_date", errMap)
+		SetString(&obj.TSubject, row, "t_subject", errMap)
+		SetString(&obj.TComments, row, "t_comments", errMap)
+		res = append(res, &obj)
+	}
+	err = dao.ds.QueryAllRows(ctx, sql, _onRow)
+	if err == nil {
+		err = ErrMapToErr(errMap)
 	}
 	return
 }
 
 // C(R)UD: tasks
 
-func (dao *TasksDao) ReadTask(ctx context.Context, tId int64) (res *dto.Task, err error) {
+func (dao *TasksDao) ReadTask(ctx context.Context, tId int64) (*dto.Task, error) {
 	sql := `select * from tasks where t_id=?`
 	row, err := dao.ds.QueryRow(ctx, sql, tId)
 	if err != nil {
-		return
+		return nil, err
 	}
-	res = &dto.Task{}
+	res := dto.Task{}
 	errMap := make(map[string]int)
 	SetInt64(&res.TId, row, "t_id", errMap)
 	SetInt64(&res.PId, row, "p_id", errMap)
@@ -42,7 +64,7 @@ func (dao *TasksDao) ReadTask(ctx context.Context, tId int64) (res *dto.Task, er
 	SetString(&res.TSubject, row, "t_subject", errMap)
 	SetString(&res.TComments, row, "t_comments", errMap)
 	err = ErrMapToErr(errMap)
-	return
+	return &res, err
 }
 
 // CR(U)D: tasks
@@ -86,13 +108,14 @@ func (dao *TasksDao) DeleteGroupTasks(ctx context.Context, gId string) (rowsAffe
 	return
 }
 
-func (dao *TasksDao) GetCount(ctx context.Context) (res int64, err error) {
+func (dao *TasksDao) GetCount(ctx context.Context) (int64, error) {
 	sql := `select count(*) from tasks`
 	r, err := dao.ds.Query(ctx, sql)
+	var res int64
 	if err == nil {
 		err = SetRes(&res, r)
 	}
-	return
+	return res, err
 }
 
 func (dao *TasksDao) GetGroupTasks2(ctx context.Context, gId int64) (res []*dto.TaskLi, err error) {
