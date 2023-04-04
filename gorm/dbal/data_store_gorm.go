@@ -554,7 +554,7 @@ func _fetchAllFromCursor(rows driver.Rows, onRowFunc interface{}) (err error) {
 			}
 			fa, onRowCompleted := onRow()
 			for i, v := range values {
-				err = _assign(fa[i], v)
+				err = SetRes(fa[i], v)
 				if err != nil {
 					return
 				}
@@ -608,7 +608,7 @@ func (ds *_DS) _queryRowValues(ctx context.Context, sqlStr string, queryArgs ...
 	}
 	for _, arg := range queryArgs {
 		if _isPtr(arg) {
-			err = assign(arg, values[outParamIndex])
+			err = SetRes(arg, values[outParamIndex])
 			if err != nil {
 				return
 			}
@@ -786,10 +786,11 @@ func (ds *_DS) QueryAllByFA(ctx context.Context, sqlStr string, onRow func() (fa
 
 /*
 // MySQL: if string is ok for all types (no conversions needed), use this:
-func (ds *_DS) _prepareFetch(rows *sql.Rows) ([]string, map[string]interface{}, []string, []interface{}) {
-	// ...
-	values := make([]string, len(colNames))
-}
+
+	func (ds *_DS) _prepareFetch(rows *sql.Rows) ([]string, map[string]interface{}, []string, []interface{}) {
+		// ...
+		values := make([]string, len(colNames))
+	}
 */
 func (ds *_DS) _prepareFetch(rows *sql.Rows) (colNames []string, data map[string]interface{}, values []interface{}, valuePointers []interface{}, err error) {
 	colNames, err = rows.Columns()
@@ -826,7 +827,38 @@ func (ds *_DS) _formatSQL(sqlStr string) string {
 	return sqlStr
 }
 
-func _assignString(d *string, value interface{}) bool {
+func _getValue(row map[string]interface{}, colName string, errMap map[string]int) (value interface{}, ok bool) {
+	value, ok = row[colName]
+	if !ok {
+		key := fmt.Sprintf("%s: no such column", colName)
+		count, ok := errMap[key]
+		if ok {
+			errMap[key] = count + 1
+		} else {
+			errMap[key] = 1
+		}
+		return
+	}
+	return
+}
+
+func AssignErr(dstPtr interface{}, value interface{}, funcName string, errMsg string) error {
+	return errors.New(fmt.Sprintf("%s %T <- %T %s", funcName, dstPtr, value, errMsg))
+}
+
+func UnknownTypeErr(dstPtr interface{}, value interface{}, funcName string) error {
+	return AssignErr(dstPtr, value, funcName, "unknown type")
+}
+
+func SetString(d *string, row map[string]interface{}, colName string, errMap map[string]int) error {
+	value, ok := _getValue(row, colName, errMap)
+	if ok {
+		return _setString(d, value)
+	}
+	return nil
+}
+
+func _setString(d *string, value interface{}) error {
 	switch v := value.(type) {
 	case []byte:
 		*d = string(v)
@@ -839,12 +871,20 @@ func _assignString(d *string, value interface{}) bool {
 	case time.Time:
 		*d = v.Format("2006-01-02 15:04:05")
 	default:
-		return false
+		return UnknownTypeErr(d, value, "_setString")
 	}
-	return true
+	return nil
 }
 
-func _assignInt64(d *int64, value interface{}) bool {
+func SetInt64(d *int64, row map[string]interface{}, colName string, errMap map[string]int) error {
+	value, ok := _getValue(row, colName, errMap)
+	if ok {
+		return _setInt64(d, value)
+	}
+	return nil
+}
+
+func _setInt64(d *int64, value interface{}) error {
 	switch v := value.(type) {
 	case int64:
 		*d = v
@@ -856,17 +896,33 @@ func _assignInt64(d *int64, value interface{}) bool {
 		*d = int64(v)
 	case []byte:
 		str := string(v)
-		*d, _ = strconv.ParseInt(str, 10, 64)
+		i64, err := strconv.ParseInt(str, 10, 64)
+		if err != nil {
+			return AssignErr(d, value, "_setInt64", err.Error())
+		}
+		*d = i64
 	case string:
 		str := value.(string)
-		*d, _ = strconv.ParseInt(str, 10, 64)
+		i64, err := strconv.ParseInt(str, 10, 64)
+		if err != nil {
+			return AssignErr(d, value, "_setInt64", err.Error())
+		}
+		*d = i64
 	default:
-		return false
+		return UnknownTypeErr(d, value, "_setInt64")
 	}
-	return true
+	return nil
 }
 
-func _assignInt32(d *int32, value interface{}) bool {
+func SetInt32(d *int32, row map[string]interface{}, colName string, errMap map[string]int) error {
+	value, ok := _getValue(row, colName, errMap)
+	if ok {
+		return _setInt32(d, value)
+	}
+	return nil
+}
+
+func _setInt32(d *int32, value interface{}) error {
 	switch v := value.(type) {
 	case int32:
 		*d = v
@@ -879,21 +935,31 @@ func _assignInt32(d *int32, value interface{}) bool {
 	case []byte:
 		str := string(v)
 		d64, err := strconv.ParseInt(str, 10, 32)
-		if err == nil {
-			*d = int32(d64)
+		if err != nil {
+			return AssignErr(d, value, "_setInt32", err.Error())
 		}
+		*d = int32(d64)
 	case string:
 		d64, err := strconv.ParseInt(v, 10, 32)
-		if err == nil {
-			*d = int32(d64)
+		if err != nil {
+			return AssignErr(d, value, "_setInt32", err.Error())
 		}
+		*d = int32(d64)
 	default:
-		return false
+		return UnknownTypeErr(d, value, "_setInt32")
 	}
-	return true
+	return nil
 }
 
-func _assignFloat32(d *float32, value interface{}) bool {
+func SetFloat32(d *float32, row map[string]interface{}, colName string, errMap map[string]int) error {
+	value, ok := _getValue(row, colName, errMap)
+	if ok {
+		return _setFloat32(d, value)
+	}
+	return nil
+}
+
+func _setFloat32(d *float32, value interface{}) error {
 	switch v := value.(type) {
 	case float32:
 		*d = v
@@ -901,18 +967,32 @@ func _assignFloat32(d *float32, value interface{}) bool {
 		*d = float32(v)
 	case []byte:
 		str := string(v) // PostgeSQL
-		d64, _ := strconv.ParseFloat(str, 64)
+		d64, err := strconv.ParseFloat(str, 64)
+		if err != nil {
+			return AssignErr(d, value, "_setFloat32", err.Error())
+		}
 		*d = float32(d64)
 	case string:
-		d64, _ := strconv.ParseFloat(v, 64) // Oracle
+		d64, err := strconv.ParseFloat(v, 64) // Oracle
+		if err != nil {
+			return AssignErr(d, value, "_setFloat32", err.Error())
+		}
 		*d = float32(d64)
 	default:
-		return false
+		return UnknownTypeErr(d, value, "_setFloat32")
 	}
-	return true
+	return nil
 }
 
-func _assignFloat64(d *float64, value interface{}) bool {
+func SetFloat64(d *float64, row map[string]interface{}, colName string, errMap map[string]int) error {
+	value, ok := _getValue(row, colName, errMap)
+	if ok {
+		return _setFloat64(d, value)
+	}
+	return nil
+}
+
+func _setFloat64(d *float64, value interface{}) error {
 	switch v := value.(type) {
 	case float64:
 		*d = v
@@ -920,82 +1000,168 @@ func _assignFloat64(d *float64, value interface{}) bool {
 		*d = float64(v)
 	case []byte:
 		str := string(v) // PostgeSQL, MySQL
-		*d, _ = strconv.ParseFloat(str, 64)
+		var err error
+		*d, err = strconv.ParseFloat(str, 64)
+		if err != nil {
+			return AssignErr(d, value, "_setFloat64", err.Error())
+		}
 	case string:
-		*d, _ = strconv.ParseFloat(v, 64) // Oracle
+		var err error
+		*d, err = strconv.ParseFloat(v, 64) // Oracle
+		if err != nil {
+			return AssignErr(d, value, "_setFloat64", err.Error())
+		}
 	default:
-		return false
+		return UnknownTypeErr(d, value, "_setFloat64")
 	}
-	return true
+	return nil
 }
 
-func _assignTime(d *time.Time, value interface{}) bool {
+func SetTime(d *time.Time, row map[string]interface{}, colName string, errMap map[string]int) error {
+	value, ok := _getValue(row, colName, errMap)
+	if ok {
+		return _setTime(d, value)
+	}
+	return nil
+}
+
+func _setTime(d *time.Time, value interface{}) error {
 	switch v := value.(type) {
 	case time.Time:
 		*d = v
 	default:
-		return false
+		return UnknownTypeErr(d, value, "_setTime")
 	}
-	return true
+	return nil
 }
 
-func _assignBoolean(d *bool, value interface{}) bool {
+func SetBool(d *bool, row map[string]interface{}, colName string, errMap map[string]int) error {
+	value, ok := _getValue(row, colName, errMap)
+	if ok {
+		return _setBool(d, value)
+	}
+	return nil
+}
+
+func _setBool(d *bool, value interface{}) error {
 	switch v := value.(type) {
 	case []byte:
 		str := string(v) // MySQL
-		db, _ := strconv.ParseBool(str)
+		db, err := strconv.ParseBool(str)
+		if err != nil {
+			return AssignErr(d, value, "_setBool", err.Error())
+		}
 		*d = db
 	case bool:
 		*d = v
 	default:
-		return false
+		return UnknownTypeErr(d, value, "_setBool")
 	}
-	return true
+	return nil
 }
 
-func _assign(dstRef interface{}, value interface{}) error {
+func _setAny(dstPtr interface{}, value interface{}) error {
 	if value == nil {
-		switch d := dstRef.(type) {
+		switch d := dstPtr.(type) {
 		case *interface{}:
 			*d = nil
 			return nil
 		}
 		return nil // leave as-is
 	}
-	assigned := false
-	switch d := dstRef.(type) {
+	var err error
+	switch d := dstPtr.(type) {
 	case *string:
-		assigned = _assignString(d, value)
+		err = _setString(d, value)
 	case *int32:
-		assigned = _assignInt32(d, value)
+		err = _setInt32(d, value)
 	case *int64:
-		assigned = _assignInt64(d, value)
+		err = _setInt64(d, value)
 	case *float64:
-		assigned = _assignFloat64(d, value)
+		err = _setFloat64(d, value)
 	case *float32:
-		assigned = _assignFloat32(d, value)
+		err = _setFloat32(d, value)
 	case *time.Time:
-		assigned = _assignTime(d, value)
+		err = _setTime(d, value)
 	case *bool:
-		assigned = _assignBoolean(d, value)
+		err = _setBool(d, value)
 	case *[]byte: // the same as uint8
 		switch bv := value.(type) {
 		case []byte:
 			*d = bv
 			return nil
+		default:
+			return UnknownTypeErr(d, value, "_setAny")
 		}
+	//case *godror.Number:
+	//	switch v := value.(type) {
+	//	case godror.Number:
+	//		*d = v
+	//		return nil
+	//	default:
+	//		return UnknownTypeErr(d, value, "_setAny")
+	//	}
+	//case *uuid.UUID:
+	//	switch bv := value.(type) {
+	//	case []byte:
+	//		err := d.Scan(bv)
+	//		if err != nil {
+	//			return AssignErr(d, value, "_setAny", err.Error())
+	//		}
+	//		return nil
+	//  default:
+	//      return UnknownTypeErr(d, value, "_setAny")
+	//	}
+	//case *[]string:
+	//	switch bv := value.(type) {
+	//	case []byte:
+	//		sa := pq.StringArray{}
+	//		err := sa.Scan(bv)
+	//		if err != nil {
+	//			return AssignErr(d, value, "_setAny", err.Error())
+	//		}
+	//		*d = sa
+	//		return nil
+	//  default:
+	//      return UnknownTypeErr(d, value, "_setAny")
+	//	}
+	//case *pq.StringArray:
+	//	switch bv := value.(type) {
+	//	case []byte:
+	//		err := d.Scan(bv)
+	//		if err != nil {
+	//			return AssignErr(d, value, "_setAny", err.Error())
+	//		}
+	//		return nil
+	//  default:
+	//      return UnknownTypeErr(d, value, "_setAny")
+	//	}
 	case *interface{}:
 		*d = value
 		return nil
 	}
-	if !assigned {
-		return errors.New(fmt.Sprintf("%T <- %T", dstRef, value))
-	}
-	return nil
+	return err
 }
 
-func fromVal(dstRef interface{}, value interface{}, errMap map[string]int) {
-	err := assign(dstRef, value)
+func SetRes(dstPtr interface{}, value interface{}) error {
+	var err error
+	switch v := value.(type) {
+	case []interface{}:
+		switch d := dstPtr.(type) {
+		case *[]interface{}:
+			*d = v
+		default:
+			v0 := v[0]
+			err = _setAny(dstPtr, v0)
+		}
+	default:
+		err = _setAny(dstPtr, value)
+	}
+	return err
+}
+
+func SetScalarValue(dstPtr interface{}, value interface{}, errMap map[string]int) {
+	err := SetRes(dstPtr, value)
 	if err == nil {
 		return
 	}
@@ -1008,52 +1174,15 @@ func fromVal(dstRef interface{}, value interface{}, errMap map[string]int) {
 	}
 }
 
-func assign(dstRef interface{}, value interface{}) error {
-	var err error
-	switch v := value.(type) {
-	case []interface{}:
-		switch d := dstRef.(type) {
-		case *[]interface{}:
-			*d = v
-		default:
-			// use "default:" instead of "case []interface{}":
-			// because "dstRef" may be "*float64" and value may be like
-			// []interface{}{[]uint16{49, 46, 50, 48}} // []uint16 in here is a string like 1.20
-			// (e.g. PG + Query(`select get_test_rating(?)`, tId))
-			v0 := v[0]
-			err = _assign(dstRef, v0)
-		}
-	default:
-		err = _assign(dstRef, value)
-	}
-	return err
-}
-
-func fromRow(dstRef interface{}, row map[string]interface{}, colName string, errMap map[string]int) {
-	value, ok := row[colName]
+func SetAny(dstPtr interface{}, row map[string]interface{}, colName string, errMap map[string]int) {
+	value, ok := _getValue(row, colName, errMap)
 	if !ok {
-		key := fmt.Sprintf("%s: no such column", colName)
-		count, ok := errMap[key]
-		if ok {
-			errMap[key] = count + 1
-		} else {
-			errMap[key] = 1
-		}
 		return
 	}
-	err := assign(dstRef, value)
-	if err != nil {
-		key := fmt.Sprintf("%s: %s", colName, err.Error())
-		count, ok := errMap[key]
-		if ok {
-			errMap[key] = count + 1
-		} else {
-			errMap[key] = 1
-		}
-	}
+	SetScalarValue(dstPtr, value, errMap)
 }
 
-func errMapToErr(errMap map[string]int) (err error) {
+func ErrMapToErr(errMap map[string]int) (err error) {
 	if len(errMap) > 0 {
 		err = errors.New(fmt.Sprintf("%v", errMap))
 	}

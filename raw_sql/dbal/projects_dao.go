@@ -20,7 +20,7 @@ func (dao *ProjectsDao) CreateProject(ctx context.Context, p *dto.Project) (err 
 	sql := `insert into projects (p_name) values (?)`
 	res, err := dao.ds.Insert(ctx, sql, "p_id", p.PName)
 	if err == nil {
-		err = assign(&p.PId, res)
+		err = SetRes(&p.PId, res)
 	}
 	return
 }
@@ -29,12 +29,15 @@ func (dao *ProjectsDao) CreateProject(ctx context.Context, p *dto.Project) (err 
 
 func (dao *ProjectsDao) ReadProject(ctx context.Context, pId int64) (res *dto.Project, err error) {
 	sql := `select * from projects where p_id=?`
-	res = &dto.Project{}
-	_fa := []interface{}{
-		&res.PId,
-		&res.PName,
+	row, err := dao.ds.QueryRow(ctx, sql, pId)
+	if err != nil {
+		return
 	}
-	err = dao.ds.QueryByFA(ctx, sql, _fa, pId)
+	res = &dto.Project{}
+	errMap := make(map[string]int)
+	SetInt64(&res.PId, row, "p_id", errMap)
+	SetString(&res.PName, row, "p_name", errMap)
+	err = ErrMapToErr(errMap)
 	return
 }
 
@@ -59,17 +62,18 @@ func (dao *ProjectsDao) GetProjectList(ctx context.Context) (res []*dto.Project,
 		(select count(*) from tasks where p_id=p.p_id) as p_tasks_count 
 		from projects p 
 		order by p.p_id`
-	_onRow := func() (interface{}, func()) {
-		_obj := &dto.Project{}
-		return []interface{}{
-				&_obj.PId,
-				&_obj.PName,
-				&_obj.PTasksCount,
-			}, func() {
-				res = append(res, _obj)
-			}
+	errMap := make(map[string]int)
+	_onRow := func(row map[string]interface{}) {
+		obj := dto.Project{}
+		SetInt64(&obj.PId, row, "p_id", errMap)
+		SetString(&obj.PName, row, "p_name", errMap)
+		SetInt64(&obj.PTasksCount, row, "p_tasks_count", errMap)
+		res = append(res, &obj)
 	}
-	err = dao.ds.QueryAllByFA(ctx, sql, _onRow)
+	err = dao.ds.QueryAllRows(ctx, sql, _onRow)
+	if err == nil {
+		err = ErrMapToErr(errMap)
+	}
 	return
 }
 
@@ -81,12 +85,12 @@ func (dao *ProjectsDao) GetProjectIds(ctx context.Context) (res []int64, err err
 	errMap := make(map[string]int)
 	onRow := func(val interface{}) {
 		var data int64
-		fromVal(&data, val, errMap)
+		SetScalarValue(&data, val, errMap)
 		res = append(res, data)
 	}
 	err = dao.ds.QueryAll(ctx, sql, onRow)
 	if err == nil {
-		err = errMapToErr(errMap)
+		err = ErrMapToErr(errMap)
 	}
 	return
 }
@@ -98,7 +102,7 @@ func (dao *ProjectsDao) GetProjectId(ctx context.Context) (res int64, err error)
 		order by p.p_id`
 	r, err := dao.ds.Query(ctx, sql)
 	if err == nil {
-		err = assign(&res, r)
+		err = SetRes(&res, r)
 	}
 	return
 }

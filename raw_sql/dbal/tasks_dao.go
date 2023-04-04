@@ -20,7 +20,7 @@ func (dao *TasksDao) CreateTask(ctx context.Context, p *dto.Task) (err error) {
 	sql := `insert into tasks (p_id, t_priority, t_date, t_subject, t_comments) values (?, ?, ?, ?, ?)`
 	res, err := dao.ds.Insert(ctx, sql, "t_id", p.PId, p.TPriority, p.TDate, p.TSubject, p.TComments)
 	if err == nil {
-		err = assign(&p.TId, res)
+		err = SetRes(&p.TId, res)
 	}
 	return
 }
@@ -29,16 +29,19 @@ func (dao *TasksDao) CreateTask(ctx context.Context, p *dto.Task) (err error) {
 
 func (dao *TasksDao) ReadTask(ctx context.Context, tId int64) (res *dto.Task, err error) {
 	sql := `select * from tasks where t_id=?`
-	res = &dto.Task{}
-	_fa := []interface{}{
-		&res.TId,
-		&res.PId,
-		&res.TPriority,
-		&res.TDate,
-		&res.TSubject,
-		&res.TComments,
+	row, err := dao.ds.QueryRow(ctx, sql, tId)
+	if err != nil {
+		return
 	}
-	err = dao.ds.QueryByFA(ctx, sql, _fa, tId)
+	res = &dto.Task{}
+	errMap := make(map[string]int)
+	SetInt64(&res.TId, row, "t_id", errMap)
+	SetInt64(&res.PId, row, "p_id", errMap)
+	SetInt64(&res.TPriority, row, "t_priority", errMap)
+	SetString(&res.TDate, row, "t_date", errMap)
+	SetString(&res.TSubject, row, "t_subject", errMap)
+	SetString(&res.TComments, row, "t_comments", errMap)
+	err = ErrMapToErr(errMap)
 	return
 }
 
@@ -61,18 +64,19 @@ func (dao *TasksDao) DeleteTask(ctx context.Context, p *dto.Task) (rowsAffected 
 func (dao *TasksDao) GetGroupTasks(ctx context.Context, gId int64) (res []*dto.TaskLi, err error) {
 	sql := `select t_id, t_priority, t_date, t_subject from tasks where p_id =? 
 		order by t_id`
-	_onRow := func() (interface{}, func()) {
-		_obj := &dto.TaskLi{}
-		return []interface{}{
-				&_obj.TId,
-				&_obj.TPriority,
-				&_obj.TDate,
-				&_obj.TSubject,
-			}, func() {
-				res = append(res, _obj)
-			}
+	errMap := make(map[string]int)
+	_onRow := func(row map[string]interface{}) {
+		obj := dto.TaskLi{}
+		SetInt64(&obj.TId, row, "t_id", errMap)
+		SetInt64(&obj.TPriority, row, "t_priority", errMap)
+		SetString(&obj.TDate, row, "t_date", errMap)
+		SetString(&obj.TSubject, row, "t_subject", errMap)
+		res = append(res, &obj)
 	}
-	err = dao.ds.QueryAllByFA(ctx, sql, _onRow, gId)
+	err = dao.ds.QueryAllRows(ctx, sql, _onRow, gId)
+	if err == nil {
+		err = ErrMapToErr(errMap)
+	}
 	return
 }
 
@@ -86,24 +90,25 @@ func (dao *TasksDao) GetCount(ctx context.Context) (res int64, err error) {
 	sql := `select count(*) from tasks`
 	r, err := dao.ds.Query(ctx, sql)
 	if err == nil {
-		err = assign(&res, r)
+		err = SetRes(&res, r)
 	}
 	return
 }
 
 func (dao *TasksDao) GetGroupTasks2(ctx context.Context, gId int64) (res []*dto.TaskLi, err error) {
 	sql := `select t_id, t_priority, t_date, t_subject from tasks where p_id=?`
-	_onRow := func() (interface{}, func()) {
-		_obj := &dto.TaskLi{}
-		return []interface{}{
-				&_obj.TId,
-				&_obj.TPriority,
-				&_obj.TDate,
-				&_obj.TSubject,
-			}, func() {
-				res = append(res, _obj)
-			}
+	errMap := make(map[string]int)
+	_onRow := func(row map[string]interface{}) {
+		obj := dto.TaskLi{}
+		SetInt64(&obj.TId, row, "t_id", errMap)
+		SetInt64(&obj.TPriority, row, "t_priority", errMap)
+		SetString(&obj.TDate, row, "t_date", errMap)
+		SetString(&obj.TSubject, row, "t_subject", errMap)
+		res = append(res, &obj)
 	}
-	err = dao.ds.QueryAllByFA(ctx, sql, _onRow, gId)
+	err = dao.ds.QueryAllRows(ctx, sql, _onRow, gId)
+	if err == nil {
+		err = ErrMapToErr(errMap)
+	}
 	return
 }

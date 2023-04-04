@@ -25,7 +25,7 @@
         <type detected="gorm-java.lang.Boolean" target="int64${json-gorm}"/>
         <type detected="gorm-java.lang.Float" target="float64${json-gorm}"/>
         <type detected="gorm-java.math.BigDecimal" target="float64${json-gorm}"/>
-        <type detected="gorm-java.lang.Object" target="interface{}${json}-gorm"/>
+        <type detected="gorm-java.lang.Object" target="interface{}${json-gorm}"/>
 
         <type detected="java.lang.Short" target="int32${json}"/>
         <type detected="java.lang.Integer" target="int64${json}"/>
