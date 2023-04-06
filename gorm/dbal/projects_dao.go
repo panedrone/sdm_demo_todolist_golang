@@ -25,7 +25,10 @@ func (dao *ProjectsDao) CreateProject(ctx context.Context, p *models.Project) er
 func (dao *ProjectsDao) ReadProject(ctx context.Context, pId int64) (*models.Project, error) {
 	res := &models.Project{}
 	err := dao.ds.Read(ctx, "projects", res, pId)
-	return res, err
+	if err == nil {
+		return res, nil
+	}
+	return nil, err
 }
 
 // CR(U)D: projects
@@ -47,7 +50,18 @@ func (dao *ProjectsDao) ReadProjectList(ctx context.Context) (res []*models.Proj
 		(select count(*) from tasks where p_id=p.p_id) as p_tasks_count 
 		from projects p 
 		order by p.p_id`
-	err = dao.ds.QueryByFA(ctx, sql, &res)
+	errMap := make(map[string]int)
+	_onRow := func(row map[string]interface{}) {
+		obj := models.ProjectLi{}
+		SetAny(&obj.PId, row, "p_id", errMap)
+		SetAny(&obj.PName, row, "p_name", errMap)
+		SetAny(&obj.PTasksCount, row, "p_tasks_count", errMap)
+		res = append(res, &obj)
+	}
+	err = dao.ds.QueryAllRows(ctx, sql, _onRow)
+	if err == nil {
+		err = ErrMapToErr(errMap)
+	}
 	return
 }
 

@@ -32,7 +32,10 @@ func (dao *TasksDao) ReadTaskList(ctx context.Context) (res []*models.Task, err 
 func (dao *TasksDao) ReadTask(ctx context.Context, tId int64) (*models.Task, error) {
 	res := &models.Task{}
 	err := dao.ds.Read(ctx, "tasks", res, tId)
-	return res, err
+	if err == nil {
+		return res, nil
+	}
+	return nil, err
 }
 
 // CR(U)D: tasks
