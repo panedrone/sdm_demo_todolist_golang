@@ -3,9 +3,9 @@
              xsi:noNamespaceSchemaLocation="dto.xsd">
 
     <dto-class name="Project" ref="get_projects.sql">
-        <field type="int64" column="p_id"/>
-        <field type="string" column="p_name"/>
-        <field type="int64" column="p_tasks_count"/>
+        <field type="%int64" column="p_id"/>
+        <field type="%string" column="p_name"/>
+        <field type="%int64" column="p_tasks_count"/>
     </dto-class>
 
     <dto-class name="Task" ref="tasks"/>
