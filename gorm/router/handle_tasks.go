@@ -19,7 +19,7 @@ func TaskCreate(ctx *gin.Context) {
 	var inTask NewTask
 	err := ctx.ShouldBindJSON(&inTask)
 	if err != nil {
-		abortWithBadRequest(ctx, err.Error())
+		abortWithBadJson(ctx, err)
 		return
 	}
 	t := models.Task{}
@@ -85,7 +85,7 @@ func TaskUpdate(ctx *gin.Context) {
 	var inTask models.Task
 	err = ctx.ShouldBindJSON(&inTask)
 	if err != nil {
-		abortWithBadRequest(ctx, err.Error())
+		abortWithBadJson(ctx, err)
 		return
 	}
 	_, err = time.Parse("2006-01-02", inTask.TDate)

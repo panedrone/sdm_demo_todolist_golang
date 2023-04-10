@@ -2,7 +2,6 @@ package router
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"sdm_demo_todolist/raw_sql/dbal"
@@ -15,7 +14,7 @@ func ProjectCreate(ctx *gin.Context) {
 	var inGr ProjectCreateUpdate
 	err := ctx.ShouldBindJSON(&inGr)
 	if err != nil {
-		abortWithBadRequest(ctx, err.Error())
+		abortWithBadJson(ctx, err)
 		return
 	}
 	gr := dto.Project{}
@@ -57,14 +56,14 @@ func ProjectRead(ctx *gin.Context) {
 
 func ProjectUpdate(ctx *gin.Context) {
 	var uri ProjectUri
-	if err := ctx.BindUri(&uri); err != nil {
+	if err := ctx.ShouldBindUri(&uri); err != nil {
 		abortWithBadUri(ctx, err)
 		return
 	}
 	var inProject ProjectCreateUpdate
 	err := ctx.ShouldBindJSON(&inProject)
 	if err != nil {
-		abortWithBadRequest(ctx, fmt.Sprintf("Invalid JSON: %s", err.Error()))
+		abortWithBadJson(ctx, err)
 		return
 	}
 	rowsAffected, err := gDao.UpdateProject(ctx, &dto.Project{PName: inProject.PName})

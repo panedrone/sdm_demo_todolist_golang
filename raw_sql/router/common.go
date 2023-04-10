@@ -34,6 +34,10 @@ func abortWithBadRequest(ctx *gin.Context, message string) {
 	abortWithError(ctx, http.StatusBadRequest, message)
 }
 
+func abortWithBadJson(ctx *gin.Context, err error) {
+	abortWithBadRequest(ctx, fmt.Sprintf("Invalid JSON: %s", err.Error()))
+}
+
 func abortWithNotFound(ctx *gin.Context, message string) {
 	abortWithError(ctx, http.StatusNotFound, message)
 }

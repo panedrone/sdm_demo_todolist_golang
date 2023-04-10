@@ -12,7 +12,7 @@ func ProjectCreate(ctx *gin.Context) {
 	var inGr ProjectCreateUpdate
 	err := ctx.ShouldBindJSON(&inGr)
 	if err != nil {
-		abortWithBadRequest(ctx, err.Error())
+		abortWithBadJson(ctx, err)
 		return
 	}
 	gr := models.Project{}
@@ -61,7 +61,7 @@ func ProjectUpdate(ctx *gin.Context) {
 	var inProject ProjectCreateUpdate
 	err := ctx.ShouldBindJSON(&inProject)
 	if err != nil {
-		abortWithBadRequest(ctx, err.Error())
+		abortWithBadJson(ctx, err)
 		return
 	}
 	dao := dbal.NewProjectsDao()
