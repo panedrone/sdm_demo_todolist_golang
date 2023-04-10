@@ -53,9 +53,9 @@ func (dao *ProjectsDao) ReadProjectList(ctx context.Context) (res []*models.Proj
 	errMap := make(map[string]int)
 	_onRow := func(row map[string]interface{}) {
 		obj := models.ProjectLi{}
-		SetAny(&obj.PId, row, "p_id", errMap)
-		SetAny(&obj.PName, row, "p_name", errMap)
-		SetAny(&obj.PTasksCount, row, "p_tasks_count", errMap)
+		SetInt64(&obj.PId, row, "p_id", errMap)
+		SetString(&obj.PName, row, "p_name", errMap)
+		SetInt64(&obj.PTasksCount, row, "p_tasks_count", errMap)
 		res = append(res, &obj)
 	}
 	err = dao.ds.QueryAllRows(ctx, sql, _onRow)

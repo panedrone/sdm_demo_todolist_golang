@@ -17,33 +17,21 @@
 
     <type-map default="">
 
-        <type detected="gorm-java.lang.Short" target="int32${json-gorm}"/>
         <type detected="gorm-java.lang.Integer" target="int64${json-gorm}"/>
-        <type detected="gorm-java.lang.Long" target="int64${json-gorm}"/>
-
-        <type detected="gorm-java.lang.Float" target="float32${json-gorm}"/>
-        <type detected="gorm-java.math.Double" target="float64${json-gorm}"/>
-        <type detected="gorm-java.math.BigDecimal" target="float64${json-gorm}"/>
-
+        <type detected="gorm-java.lang.Double" target="float64${json-gorm}"/>
         <type detected="gorm-java.lang.String" target="string${json-gorm}"/>
         <type detected="gorm-java.util.Date" target="time:time.Time${json-gorm}"/>
         <type detected="gorm-byte[]" target="string${json-gorm}"/>
-        <type detected="gorm-java.lang.Boolean" target="int64${json-gorm}"/>
-
         <type detected="gorm-java.lang.Object" target="interface{}${json-gorm}"/>
 
-        <type detected="java.lang.Short" target="int32${json}"/>
+        <type detected="int64" target="int64${json} -> SetInt64"/>
+        <type detected="string" target="string${json} -> SetString"/>
+
         <type detected="java.lang.Integer" target="int64${json}"/>
-        <type detected="java.lang.Long" target="int64${json}"/>
-
-        <type detected="java.lang.Boolean" target="int64${json}"/>
-        <type detected="java.lang.Float" target="float64${json}"/>
-        <type detected="java.math.BigDecimal" target="float64${json}"/>
-
+        <type detected="java.lang.Double" target="float64${json}"/>
         <type detected="java.lang.String" target="string${json}"/>
         <type detected="java.util.Date" target="time:time.Time${json}"/>
         <type detected="byte[]" target="string${json}"/>
-
         <type detected="java.lang.Object" target="interface{}${json}"/>
 
     </type-map>
