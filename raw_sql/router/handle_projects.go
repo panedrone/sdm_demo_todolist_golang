@@ -6,22 +6,23 @@ import (
 	"net/http"
 	"sdm_demo_todolist/raw_sql/dbal"
 	"sdm_demo_todolist/raw_sql/dbal/dto"
+	"sdm_demo_todolist/util"
 )
 
 var gDao = dbal.NewProjectsDao()
 
 func ProjectCreate(ctx *gin.Context) {
-	var inGr ProjectCreateUpdate
-	err := ctx.ShouldBindJSON(&inGr)
+	var inPr util.ProjectCreateUpdate
+	err := ctx.ShouldBindJSON(&inPr)
 	if err != nil {
-		abortWithBadJson(ctx, err)
+		util.AbortWithBadJson(ctx, err)
 		return
 	}
 	gr := dto.Project{}
-	gr.PName = inGr.PName
+	gr.PName = inPr.PName
 	err = gDao.CreateProject(ctx, &gr)
 	if err != nil {
-		abortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err.Error())
 		return
 	}
 	ctx.Status(http.StatusCreated)
@@ -30,66 +31,66 @@ func ProjectCreate(ctx *gin.Context) {
 func ProjectsReadAll(ctx *gin.Context) {
 	groups, err := gDao.GetProjectList(ctx)
 	if err != nil {
-		abortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err.Error())
 		return
 	}
-	respondWithJSON(ctx, http.StatusOK, groups)
+	util.RespondWithJSON(ctx, http.StatusOK, groups)
 }
 
 func ProjectRead(ctx *gin.Context) {
-	var uri ProjectUri
+	var uri util.ProjectUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
-		abortWithBadUri(ctx, err)
+		util.AbortWithBadUri(ctx, err)
 		return
 	}
 	group, err := gDao.ReadProject(ctx, uri.PId)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			abortWithNotFound(ctx, err.Error())
+			util.AbortWithNotFound(ctx, err.Error())
 		} else {
-			abortWith500(ctx, err.Error())
+			util.AbortWith500(ctx, err.Error())
 		}
 		return
 	}
-	respondWithJSON(ctx, http.StatusOK, group)
+	util.RespondWithJSON(ctx, http.StatusOK, group)
 }
 
 func ProjectUpdate(ctx *gin.Context) {
-	var uri ProjectUri
+	var uri util.ProjectUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
-		abortWithBadUri(ctx, err)
+		util.AbortWithBadUri(ctx, err)
 		return
 	}
-	var inProject ProjectCreateUpdate
+	var inProject util.ProjectCreateUpdate
 	err := ctx.ShouldBindJSON(&inProject)
 	if err != nil {
-		abortWithBadJson(ctx, err)
+		util.AbortWithBadJson(ctx, err)
 		return
 	}
 	rowsAffected, err := gDao.UpdateProject(ctx, &dto.Project{PName: inProject.PName})
 	if err != nil {
-		abortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err.Error())
 		return
 	}
 	if rowsAffected != 1 {
-		abortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err.Error())
 		return
 	}
 }
 
 func ProjectDelete(ctx *gin.Context) {
-	var uri ProjectUri
+	var uri util.ProjectUri
 	if err := ctx.BindUri(&uri); err != nil {
-		abortWithBadUri(ctx, err)
+		util.AbortWithBadUri(ctx, err)
 		return
 	}
 	rowsAffected, err := gDao.DeleteProject(ctx, &dto.Project{PId: uri.PId})
 	if err != nil {
-		abortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err.Error())
 		return
 	}
 	if rowsAffected != 1 {
-		abortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err.Error())
 		return
 	}
 	ctx.Status(http.StatusNoContent)

@@ -6,20 +6,21 @@ import (
 	"net/http"
 	"sdm_demo_todolist/gorm/dbal"
 	"sdm_demo_todolist/gorm/models"
+	"sdm_demo_todolist/util"
 )
 
 func ProjectCreate(ctx *gin.Context) {
-	var inGr ProjectCreateUpdate
+	var inGr util.ProjectCreateUpdate
 	err := ctx.ShouldBindJSON(&inGr)
 	if err != nil {
-		abortWithBadJson(ctx, err)
+		util.AbortWithBadJson(ctx, err)
 		return
 	}
 	gr := models.Project{}
 	gr.PName = inGr.PName
 	err = dbal.NewProjectsDao().CreateProject(ctx, &gr)
 	if err != nil {
-		abortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err.Error())
 		return
 	}
 	ctx.Status(http.StatusCreated)
@@ -28,65 +29,65 @@ func ProjectCreate(ctx *gin.Context) {
 func ProjectsReadAll(ctx *gin.Context) {
 	groups, err := dbal.NewProjectsDao().ReadProjectList(ctx)
 	if err != nil {
-		abortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err.Error())
 		return
 	}
-	respondWithJSON(ctx, http.StatusOK, groups)
+	util.RespondWithJSON(ctx, http.StatusOK, groups)
 }
 
 func ProjectRead(ctx *gin.Context) {
-	var uri ProjectUri
+	var uri util.ProjectUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
-		abortWithBadUri(ctx, err)
+		util.AbortWithBadUri(ctx, err)
 		return
 	}
 	gr, err := dbal.NewProjectsDao().ReadProject(ctx, uri.PId)
 	if err == gorm.ErrRecordNotFound {
-		abortWithNotFound(ctx, err.Error())
+		util.AbortWithNotFound(ctx, err.Error())
 		return
 	}
 	if err != nil {
-		abortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err.Error())
 		return
 	}
-	respondWithJSON(ctx, http.StatusOK, gr)
+	util.RespondWithJSON(ctx, http.StatusOK, gr)
 }
 
 func ProjectUpdate(ctx *gin.Context) {
-	var uri ProjectUri
+	var uri util.ProjectUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
-		abortWithBadUri(ctx, err)
+		util.AbortWithBadUri(ctx, err)
 		return
 	}
-	var inProject ProjectCreateUpdate
+	var inProject util.ProjectCreateUpdate
 	err := ctx.ShouldBindJSON(&inProject)
 	if err != nil {
-		abortWithBadJson(ctx, err)
+		util.AbortWithBadJson(ctx, err)
 		return
 	}
 	dao := dbal.NewProjectsDao()
 	gr, err := dao.ReadProject(ctx, uri.PId)
 	if err != nil {
-		abortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err.Error())
 		return
 	}
 	gr.PName = inProject.PName
 	_, err = dao.UpdateProject(ctx, gr)
 	if err != nil {
-		abortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err.Error())
 		return
 	}
 }
 
 func ProjectDelete(ctx *gin.Context) {
-	var uri ProjectUri
+	var uri util.ProjectUri
 	if err := ctx.ShouldBindUri(&uri); err != nil {
-		abortWithBadUri(ctx, err)
+		util.AbortWithBadUri(ctx, err)
 		return
 	}
 	_, err := dbal.NewProjectsDao().DeleteProject(ctx, &models.Project{PId: uri.PId})
 	if err != nil {
-		abortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err.Error())
 	}
 	ctx.Status(http.StatusNoContent)
 }

@@ -43,8 +43,8 @@ func New() *gin.Engine {
 	{
 		task := myRouter.Group("/tasks/:t_id")
 		task.GET("", TaskRead)
-		task.PUT("", taskUpdate)
-		task.DELETE("", taskDelete)
+		task.PUT("", TaskUpdate)
+		task.DELETE("", TaskDelete)
 	}
 
 	return myRouter
