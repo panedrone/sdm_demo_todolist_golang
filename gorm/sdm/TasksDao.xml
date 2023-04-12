@@ -6,4 +6,7 @@
 
     <exec-dml ref="delete from tasks where p_id=?" method="DeleteProjectTasks(p_id)"/>
 
+    <!--    testing-->
+    <query-dto-list dto="gorm-TaskLi" method="GetProjectTasks(g_id)" ref="get_project_tasks.sql"/>
+
 </dao-class>

@@ -17,22 +17,30 @@
 
     <type-map default="">
 
-        <type detected="gorm-java.lang.Integer" target="int64${json-gorm}"/>
-        <type detected="gorm-java.lang.Double" target="float64${json-gorm}"/>
-        <type detected="gorm-java.lang.String" target="string${json-gorm}"/>
-        <type detected="gorm-java.util.Date" target="time:time.Time${json-gorm}"/>
-        <type detected="gorm-byte[]" target="string${json-gorm}"/>
+        <type detected="gorm-java.lang.Integer" target="int64${json-gorm} -> SetInt64"/>
+
+        <type detected="gorm-java.lang.Float" target="float32${json-gorm} -> SetFloat64"/>
+        <type detected="gorm-java.lang.Double" target="float64${json-gorm} -> SetFloat64"/>
+
+        <type detected="gorm-java.lang.String" target="string${json-gorm} -> SetString"/>
+        <type detected="gorm-java.util.Date" target="time:time.Time${json-gorm} -> SetTime"/>
+        <type detected="gorm-byte[]" target="byte[]{$json-gorm} -> SetBytes"/>
+
         <type detected="gorm-java.lang.Object" target="interface{}${json-gorm}"/>
 
         <type detected="%int64" target="int64${json} -> SetInt64"/>
         <type detected="%float64" target="float64${json} -> SetFloat64"/>
         <type detected="%string" target="string${json} -> SetString"/>
 
-        <type detected="java.lang.Integer" target="int64${json}"/>
-        <type detected="java.lang.Double" target="float64${json}"/>
-        <type detected="java.lang.String" target="string${json}"/>
-        <type detected="java.util.Date" target="time:time.Time${json}"/>
-        <type detected="byte[]" target="string${json}"/>
+        <type detected="java.lang.Integer" target="int64${json} -> SetInt64"/>
+
+        <type detected="java.lang.Float" target="float32${json} -> SetFloat64"/>
+        <type detected="java.lang.Double" target="float64${json} -> SetFloat64"/>
+
+        <type detected="java.lang.String" target="string${json} -> SetString"/>
+        <type detected="java.util.Date" target="time:time.Time${json} -> SetTime"/>
+        <type detected="byte[]" target="byte[]{$json} -> SetBytes"/>
+
         <type detected="java.lang.Object" target="interface{}${json}"/>
 
     </type-map>

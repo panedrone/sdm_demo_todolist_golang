@@ -57,3 +57,22 @@ func (dao *TasksDao) DeleteProjectTasks(ctx context.Context, pId string) (rowsAf
 	rowsAffected, err = dao.ds.Exec(ctx, sql, pId)
 	return
 }
+
+func (dao *TasksDao) GetProjectTasks(ctx context.Context, gId string) (res []*models.TaskLi, err error) {
+	sql := `select t_id, t_priority, t_date, t_subject from tasks where p_id =? 
+		order by t_id`
+	errMap := make(map[string]int)
+	_onRow := func(row map[string]interface{}) {
+		obj := models.TaskLi{}
+		SetInt64(&obj.TId, row, "t_id", errMap)
+		SetInt64(&obj.TPriority, row, "t_priority", errMap)
+		SetString(&obj.TDate, row, "t_date", errMap)
+		SetString(&obj.TSubject, row, "t_subject", errMap)
+		res = append(res, &obj)
+	}
+	err = dao.ds.QueryAllRows(ctx, sql, _onRow, gId)
+	if err == nil {
+		err = ErrMapToErr(errMap)
+	}
+	return
+}
