@@ -1,10 +1,10 @@
 # sdm_demo_todolist_golang
-Quick Demo of how to use [SQL DAL Maker](https://github.com/panedrone/sqldalmaker) + Go: 
+Quick Demo of how to use [SQL DAL Maker](https://github.com/panedrone/sqldalmaker) + Go.
+
+There are two parts:
 
 * Gorm
 * direct "database/sql"
-
-Both parts are sharing the same Vue.js front-end and the same SQLite3 database.
 
 ![demo-go.png](demo-go.png)
 
@@ -16,9 +16,9 @@ dto.xml
 
     <header>// Project list item</header>
     
-    <field type="int64${json}" column="p_id"/>
-    <field type="string${json}" column="p_name"/>
-    <field type="int64${json}" column="p_tasks_count"/>
+    <field type="%int64" column="p_id"/>
+    <field type="%string" column="p_name"/>
+    <field type="%int64" column="p_tasks_count"/>
 
 </dto-class>
 
