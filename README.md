@@ -3,8 +3,8 @@ Quick Demo of how to use [SQL DAL Maker](https://github.com/panedrone/sqldalmake
 
 There are two parts:
 
-* Gorm
-* direct "database/sql"
+* using Gorm
+* using "database/sql" directly
 
 ![demo-go.png](demo-go.png)
 
