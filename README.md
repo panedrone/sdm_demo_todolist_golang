@@ -49,9 +49,9 @@ dao := dbal.NewProjectsDao()
 // ---
 err := dao.CreateProject(ctx, &project)
 // ---
-groups, err = dao.ReadProjectList(ctx)
+projects, err = dao.ReadProjectList(ctx)
 // ---
-group, err = dao.ReadProject(ctx, uri.PId)
+project, err = dao.ReadProject(ctx, uri.PId)
 // ---
 ra, err = dao.UpdateProject(ctx, project)
 // ---
