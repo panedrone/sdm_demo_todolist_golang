@@ -20,7 +20,7 @@ func ProjectCreate(ctx *gin.Context) {
 	gr.PName = inGr.PName
 	err = dbal.NewProjectsDao().CreateProject(ctx, &gr)
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 		return
 	}
 	ctx.Status(http.StatusCreated)
@@ -29,7 +29,7 @@ func ProjectCreate(ctx *gin.Context) {
 func ProjectsReadAll(ctx *gin.Context) {
 	groups, err := dbal.NewProjectsDao().ReadProjectList(ctx)
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 		return
 	}
 	util.RespondWithJSON(ctx, http.StatusOK, groups)
@@ -47,7 +47,7 @@ func ProjectRead(ctx *gin.Context) {
 		return
 	}
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 		return
 	}
 	util.RespondWithJSON(ctx, http.StatusOK, gr)
@@ -66,15 +66,15 @@ func ProjectUpdate(ctx *gin.Context) {
 		return
 	}
 	dao := dbal.NewProjectsDao()
-	gr, err := dao.ReadProject(ctx, uri.PId)
+	pr, err := dao.ReadProject(ctx, uri.PId)
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWithBadRequest(ctx, err.Error())
 		return
 	}
-	gr.PName = inProject.PName
-	_, err = dao.UpdateProject(ctx, gr)
+	pr.PName = inProject.PName
+	_, err = dao.UpdateProject(ctx, pr)
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 		return
 	}
 }
@@ -87,7 +87,7 @@ func ProjectDelete(ctx *gin.Context) {
 	}
 	_, err := dbal.NewProjectsDao().DeleteProject(ctx, &models.Project{PId: uri.PId})
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 	}
 	ctx.Status(http.StatusNoContent)
 }

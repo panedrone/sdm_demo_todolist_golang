@@ -32,7 +32,7 @@ func TaskCreate(ctx *gin.Context) {
 	t.TDate = layoutISO
 	err = dbal.NewTasksDao().CreateTask(ctx, &t)
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 		return
 	}
 	ctx.Status(http.StatusCreated)
@@ -51,7 +51,7 @@ func TaskRead(ctx *gin.Context) {
 		return
 	}
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 		return
 	}
 	util.RespondWithJSON(ctx, http.StatusOK, task)
@@ -66,7 +66,7 @@ func TasksReadByProject(ctx *gin.Context) {
 	var tasks []*models.TaskLi
 	tasks, err := dbal.NewTasksDao().ReadProjectTasks(ctx, uri.PId)
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 		return
 	}
 	util.RespondWithJSON(ctx, http.StatusOK, tasks)
@@ -110,7 +110,7 @@ func TaskUpdate(ctx *gin.Context) {
 	t.TComments = inTask.TComments
 	_, err = dao.UpdateTask(ctx, t)
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 		return
 	}
 }
@@ -124,7 +124,7 @@ func TaskDelete(ctx *gin.Context) {
 	}
 	_, err = dbal.NewTasksDao().DeleteTask(ctx, &models.Task{TId: uri.TId})
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 		return
 	}
 	ctx.Status(http.StatusNoContent)
