@@ -9,7 +9,7 @@ import (
 	"sdm_demo_todolist/util"
 )
 
-var gDao = dbal.NewProjectsDao()
+var pDao = dbal.NewProjectsDao()
 
 func ProjectCreate(ctx *gin.Context) {
 	var inPr util.ProjectCreateUpdate
@@ -18,23 +18,23 @@ func ProjectCreate(ctx *gin.Context) {
 		util.AbortWithBadJson(ctx, err)
 		return
 	}
-	gr := dto.Project{}
-	gr.PName = inPr.PName
-	err = gDao.CreateProject(ctx, &gr)
+	pr := dto.Project{}
+	pr.PName = inPr.PName
+	err = pDao.CreateProject(ctx, &pr)
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 		return
 	}
 	ctx.Status(http.StatusCreated)
 }
 
 func ProjectsReadAll(ctx *gin.Context) {
-	groups, err := gDao.GetProjectList(ctx)
+	pl, err := pDao.GetProjectList(ctx)
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 		return
 	}
-	util.RespondWithJSON(ctx, http.StatusOK, groups)
+	util.RespondWithJSON(ctx, http.StatusOK, pl)
 }
 
 func ProjectRead(ctx *gin.Context) {
@@ -43,16 +43,16 @@ func ProjectRead(ctx *gin.Context) {
 		util.AbortWithBadUri(ctx, err)
 		return
 	}
-	group, err := gDao.ReadProject(ctx, uri.PId)
+	pr, err := pDao.ReadProject(ctx, uri.PId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			util.AbortWithNotFound(ctx, err.Error())
 		} else {
-			util.AbortWith500(ctx, err.Error())
+			util.AbortWith500(ctx, err)
 		}
 		return
 	}
-	util.RespondWithJSON(ctx, http.StatusOK, group)
+	util.RespondWithJSON(ctx, http.StatusOK, pr)
 }
 
 func ProjectUpdate(ctx *gin.Context) {
@@ -61,19 +61,15 @@ func ProjectUpdate(ctx *gin.Context) {
 		util.AbortWithBadUri(ctx, err)
 		return
 	}
-	var inProject util.ProjectCreateUpdate
-	err := ctx.ShouldBindJSON(&inProject)
+	var inPr util.ProjectCreateUpdate
+	err := ctx.ShouldBindJSON(&inPr)
 	if err != nil {
 		util.AbortWithBadJson(ctx, err)
 		return
 	}
-	rowsAffected, err := gDao.UpdateProject(ctx, &dto.Project{PName: inProject.PName})
+	_, err = pDao.UpdateProject(ctx, &dto.Project{PName: inPr.PName})
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
-		return
-	}
-	if rowsAffected != 1 {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 		return
 	}
 }
@@ -84,13 +80,9 @@ func ProjectDelete(ctx *gin.Context) {
 		util.AbortWithBadUri(ctx, err)
 		return
 	}
-	rowsAffected, err := gDao.DeleteProject(ctx, &dto.Project{PId: uri.PId})
+	_, err := pDao.DeleteProject(ctx, &dto.Project{PId: uri.PId})
 	if err != nil {
-		util.AbortWith500(ctx, err.Error())
-		return
-	}
-	if rowsAffected != 1 {
-		util.AbortWith500(ctx, err.Error())
+		util.AbortWith500(ctx, err)
 		return
 	}
 	ctx.Status(http.StatusNoContent)

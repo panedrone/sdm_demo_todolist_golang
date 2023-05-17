@@ -42,8 +42,8 @@ func AbortWithNotFound(ctx *gin.Context, message string) {
 	AbortWithError(ctx, http.StatusNotFound, message)
 }
 
-func AbortWith500(ctx *gin.Context, message string) {
-	AbortWithError(ctx, http.StatusInternalServerError, message)
+func AbortWith500(ctx *gin.Context, err error) {
+	AbortWithError(ctx, http.StatusInternalServerError, err.Error())
 }
 
 func AbortWithError(ctx *gin.Context, httpStatusCode int, message string) {
