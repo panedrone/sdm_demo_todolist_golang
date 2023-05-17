@@ -67,7 +67,7 @@ func ProjectUpdate(ctx *gin.Context) {
 		util.AbortWithBadJson(ctx, err)
 		return
 	}
-	_, err = pDao.UpdateProject(ctx, &dto.Project{PName: inPr.PName})
+	_, err = pDao.UpdateProject(ctx, &dto.Project{PId: uri.PId, PName: inPr.PName})
 	if err != nil {
 		util.AbortWith500(ctx, err)
 		return
