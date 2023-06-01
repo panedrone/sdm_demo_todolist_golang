@@ -22,7 +22,7 @@ func New() *gin.Engine {
 		ctx.Redirect(http.StatusTemporaryRedirect, "/static")
 	})
 
-	api := r.Group("", func(ctx *gin.Context) { // middleware
+	api := r.Group("/api", func(ctx *gin.Context) { // middleware
 		ctx.Set("db", dbal.WithContext(ctx))
 	})
 

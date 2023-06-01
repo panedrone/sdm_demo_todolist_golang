@@ -21,11 +21,13 @@ func New() *gin.Engine {
 		ctx.Redirect(http.StatusTemporaryRedirect, "/static")
 	})
 
-	myRouter.GET("/whoiam", func(ctx *gin.Context) {
+	api := myRouter.Group("/api")
+
+	api.GET("/whoiam", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "database/sql")
 	})
 	{
-		groups := myRouter.Group("/projects")
+		groups := api.Group("/projects")
 		groups.GET("/", ProjectsReadAll)
 		groups.POST("/", ProjectCreate)
 		{
@@ -41,7 +43,7 @@ func New() *gin.Engine {
 		}
 	}
 	{
-		task := myRouter.Group("/tasks/:t_id")
+		task := api.Group("/tasks/:t_id")
 		task.GET("", TaskRead)
 		task.PUT("", TaskUpdate)
 		task.DELETE("", TaskDelete)
