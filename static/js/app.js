@@ -41,7 +41,7 @@ new Vue({
             fetch("/projects")
                 .then(async (resp) => {
                     if (resp.status === 200) {
-                        this.$data.projects = await resp.json()
+                        this.projects = await resp.json()
                     } else {
                         let j = await resp.text()
                         alert(resp.status + "\n" + j);
@@ -61,7 +61,7 @@ new Vue({
             fetch("/projects/" + p_id)
                 .then(async (resp) => {
                     if (resp.status === 200) {
-                        this.$data.current_project = await resp.json()
+                        this.current_project = await resp.json()
                     } else {
                         let j = await resp.text()
                         alert(resp.status + "\n" + j);
@@ -75,7 +75,7 @@ new Vue({
             fetch("/projects/" + p_id + "/tasks")
                 .then(async (resp) => {
                     if (resp.status === 200) {
-                        this.$data.tasks = await resp.json()
+                        this.tasks = await resp.json()
                     } else {
                         let j = await resp.text()
                         alert(resp.status + "\n" + j);

@@ -10,7 +10,7 @@
 
 <div id="app" v-cloak>
 
-    <h2>SDM + Go + {{ $data.whoiam }} + SQLite3 + Vue.js</h2>
+    <h2>SDM + Go + {{ whoiam }} + SQLite3 + Vue.js</h2>
 
     <table class="bg" style="padding: 4px;">
         <tr>
@@ -23,7 +23,7 @@
                                     <th>Project</th>
                                     <th>Tasks Count</th>
                                 </tr>
-                                <tr v-for="project in $data.projects">
+                                <tr v-for="project in projects">
                                     <td>
                                         <a href="#" @click="renderProjectDetails(project.p_id)">
                                             {{ project.p_name }}
@@ -99,7 +99,7 @@
                                     <th>Subject</th>
                                     <th>Priority</th>
                                 </tr>
-                                <tr v-for="t in $data.tasks">
+                                <tr v-for="t in tasks">
                                     <td>
                                         {{ t.t_date }}
                                     </td>
