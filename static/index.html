@@ -38,22 +38,20 @@
                     </tr>
                     <tr>
                         <td>
-                            <form method="post" enctype="multipart/form-data">
-                                <table class="controls">
-                                    <tr>
-                                        <td>
-                                            <label>
-                                                <input type="text" v-model="p_name"/>
-                                            </label>
-                                        </td>
-                                        <td class="w1">
-                                            <a href="#" @click="projectCreate()">
-                                                <input type="button" value="+"/>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </form>
+                            <table class="controls">
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <input type="text" v-model="p_name"/>
+                                        </label>
+                                    </td>
+                                    <td class="w1">
+                                        <a href="#" @click="projectCreate()">
+                                            <input type="button" value="+"/>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                 </table>
@@ -62,33 +60,31 @@
                 <table>
                     <tr>
                         <td>
-                            <form method="post">
-                                <table class="controls">
-                                    <tr>
-                                        <td>
-                                            <label>
-                                                <input type="text" class="project-header"
-                                                       v-model="current_project.p_name"/>
-                                            </label>
-                                        </td>
-                                        <td class="w1">
-                                            <a href="#" @click="projectUpdate()">
-                                                <input type="button" value="&#x2713;"/>
-                                            </a>
-                                        </td>
-                                        <td class="w1">
-                                            <a href="#" @click="projectDelete()">
-                                                <input type="button" value="x"/>
-                                            </a>
-                                        </td>
-                                        <td class="w1">
-                                            <a href="#" @click="hideProjectDetails()">
-                                                <input type="button" value="&lt;"/>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </form>
+                            <table class="controls">
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <input type="text" class="project-header"
+                                                   v-model="current_project.p_name"/>
+                                        </label>
+                                    </td>
+                                    <td class="w1">
+                                        <a href="#" @click="projectUpdate()">
+                                            <input type="button" value="&#x2713;"/>
+                                        </a>
+                                    </td>
+                                    <td class="w1">
+                                        <a href="#" @click="projectDelete()">
+                                            <input type="button" value="x"/>
+                                        </a>
+                                    </td>
+                                    <td class="w1">
+                                        <a href="#" @click="hideProjectDetails()">
+                                            <input type="button" value="&lt;"/>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                     <tr>
@@ -108,7 +104,6 @@
                                             {{ t.t_subject }}
                                         </a>
                                     </td>
-
                                     <td style="text-align: center;">
                                         {{ t.t_priority }}
                                     </td>
@@ -118,22 +113,20 @@
                     </tr>
                     <tr>
                         <td>
-                            <form method="post">
-                                <table class="controls">
-                                    <tr>
-                                        <td>
-                                            <label>
-                                                <input type="text" v-model="t_subject"/>
-                                            </label>
-                                        </td>
-                                        <td class="w1">
-                                            <a href="#" @click="taskCreate()">
-                                                <input type="button" value="+"/>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </form>
+                            <table class="controls">
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <input type="text" v-model="t_subject"/>
+                                        </label>
+                                    </td>
+                                    <td class="w1">
+                                        <a href="#" @click="taskCreate()">
+                                            <input type="button" value="+"/>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                 </table>
